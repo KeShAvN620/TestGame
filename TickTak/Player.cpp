@@ -3,14 +3,17 @@
 Player::Player():speed(60.0f), playerSpeed(0.0f, 0.0f),counterLeft(0), 
 counterRight(0), counterIdle(0), isMovingRight(false), isMovingLeft(false), 
 animationTime(0), animationSpeed(5.0f * 0.0166667f) {
-	if (!texture.loadFromFile("Assets/Adventure/AD_IDLE_RUN.png")) {
+	if (!texture.loadFromFile("Assets/Adventure/AD_IDLE_RUN_V1.png")) {
 		std::cout << "failed to load player texture " << std::endl;
 	}
 	for (unsigned int i = 0; i < idleFrame; i++) {
 		this->idleAnimation.push_back(sf::IntRect( i * spriteSize , 0 , spriteSize , spriteSize));
 	}
-	for (unsigned int i = 0; i < idleFrame; i++) {
-		this->runAnimation.push_back(sf::IntRect(i * spriteSize, spriteSize, spriteSize, spriteSize));
+	for (unsigned int i = 0; i < runFrame; i++) {
+		this->rightAnimation.push_back(sf::IntRect(i * spriteSize, spriteSize, spriteSize, spriteSize));
+	}
+	for (unsigned int i = 0; i < runFrame; i++) {
+		this->leftAnimation.push_back(sf::IntRect(i * spriteSize,2 * spriteSize, spriteSize, spriteSize));
 	}
 	this->sprite.setTexture(texture);
 	this->sprite.setTextureRect(this->idleAnimation[0]);
@@ -54,25 +57,16 @@ void Player::AnimationUpdate(float& deltaTime){
 	if (this->animationTime >= this->animationSpeed) {
 		this->animationTime -= this->animationSpeed;
 		if (isMovingRight) {
-			counterRight = (counterRight + 1) % runAnimation.size();
-			this->sprite.setTextureRect(this->runAnimation[counterRight]);
-			if (this->sprite.getScale().x < 0) {
-				this->sprite.setScale(sf::Vector2f(float(scale), float(scale)));
-			}
+			counterRight = (counterRight + 1) % rightAnimation.size();
+			this->sprite.setTextureRect(this->rightAnimation[counterRight]);
 		}
 		else if (isMovingLeft) {
-			counterLeft = (counterLeft + 1) % runAnimation.size();
-			this->sprite.setTextureRect(this->runAnimation[counterLeft]);
-			if (this->sprite.getScale().x > 0) {
-				this->sprite.setScale(sf::Vector2f(-float(scale), float(scale)));
-			}
+			counterLeft = (counterLeft + 1) % leftAnimation.size();
+			this->sprite.setTextureRect(this->leftAnimation[counterLeft]);
 		}
 		else {
 			counterIdle = (counterIdle + 1) % idleAnimation.size();
 			this->sprite.setTextureRect(this->idleAnimation[counterIdle]);
-			if (this->sprite.getScale().x < 0) {
-				this->sprite.setScale(sf::Vector2f(float(scale), float(scale)));
-			}
 		}
 	}
 }

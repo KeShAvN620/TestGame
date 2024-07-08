@@ -10,7 +10,8 @@ private:
 	sf::Sprite sprite;
 private:
 	std::vector<sf::IntRect> idleAnimation;
-	std::vector<sf::IntRect> runAnimation;
+	std::vector<sf::IntRect> rightAnimation;
+	std::vector<sf::IntRect> leftAnimation;
 	sf::Vector2f playerSpeed;
 	float speed;
 	unsigned int counterLeft;
