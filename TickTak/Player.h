@@ -4,28 +4,31 @@
 #include<vector>
 class Player
 {
-	enum {idleFrame = 4 , runFrame = 6 , spriteSize = 32 , scale = 2 , zero = 0 };
+	static enum {idleFrame = 4 , runFrame = 6 , spriteSize = 32 , zero = 0 };
 private:
 	sf::Texture texture;
 	sf::Sprite sprite;
+
 private:
 	std::vector<sf::IntRect> idleAnimation;
 	std::vector<sf::IntRect> rightAnimation;
 	std::vector<sf::IntRect> leftAnimation;
 	sf::Vector2f playerSpeed;
+
+private:
 	float speed;
+	float animationTime;
+	float animationSpeed;
+	float scale;
 	unsigned int counterLeft;
 	unsigned int counterRight;
 	unsigned int counterIdle;
 	bool isMovingRight;
 	bool isMovingLeft;
-	float animationTime;
-	float animationSpeed;
 
 
 public:
 	Player();
-
 public:
 	void Load();
 	void Update( float& deltaTime);

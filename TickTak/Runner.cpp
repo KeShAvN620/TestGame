@@ -3,6 +3,7 @@
 Runner::Runner() : window(std::make_shared<sf::RenderWindow>(sf::VideoMode(800, 600), "SFML works!")),
 					deltaTime(0) {
 	window->setFramerateLimit(60);
+	
 }
 
 
