@@ -1,7 +1,9 @@
+//Background.h
 #pragma once
 #include<iostream>
 #include <SFML/Graphics.hpp>
 #include<memory>
+
 class BackGround
 {	
 	struct PathSpecification { // formula to find the required scale   reqScale = maxDimension/(maxDimension - requiredDimesion)

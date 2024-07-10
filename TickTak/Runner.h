@@ -1,21 +1,17 @@
+//Runner.h
 #pragma once
 #include<iostream>
 #include <SFML/Graphics.hpp>
 #include<memory>
-#include"Player.h"
-#include "BackGround.h"
+#include"Utility.h"
+#include"GameObject.h"
 
 class Runner
 {
-	
-	float windowMinWidth , windowMinHeight , windowMaxWidth, windowMaxHeight;
 	std::shared_ptr<sf::RenderWindow> window;
 	sf::Event event;
 	sf::Clock clock;
-	
-
 	BackGround backGroundPath;
-	Player player;
 private:
 	float deltaTime;
 

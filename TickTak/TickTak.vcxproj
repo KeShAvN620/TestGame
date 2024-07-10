@@ -72,12 +72,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)Build\$(Platform)\bin\$(Configuration)\output</OutDir>
-    <IntDir>$(SolutionDir)Build\$(Platform)\bin\$(Configuration)\inter</IntDir>
+    <OutDir>$(SolutionDir)Build\$(Platform)\bin\$(Configuration)\output\</OutDir>
+    <IntDir>$(SolutionDir)Build\$(Platform)\bin\$(Configuration)\inter\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)Build\$(Platform)\bin\$(Configuration)\output</OutDir>
-    <IntDir>$(SolutionDir)Build\$(Platform)\bin\$(Configuration)\inter</IntDir>
+    <OutDir>$(SolutionDir)Build\$(Platform)\bin\$(Configuration)\output\</OutDir>
+    <IntDir>$(SolutionDir)Build\$(Platform)\bin\$(Configuration)\inter\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="main.cpp" />

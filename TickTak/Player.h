@@ -1,12 +1,11 @@
+//Player.h
 #pragma once
 #include<iostream>
 #include <SFML/Graphics.hpp>
 #include<vector>
 #include"Utility.h"
-
 class Player
 {
-	static enum {idleFrame = 4 , runFrame = 6 , spriteSize = 32 , zero = 0 };
 private:
 	sf::Texture texture;
 	sf::Sprite sprite;
@@ -22,11 +21,11 @@ private:
 	float animationTime;
 	float animationSpeed;
 	float scale;
+	bool isMovingRight;
+	bool isMovingLeft;
 	unsigned int counterLeft;
 	unsigned int counterRight;
 	unsigned int counterIdle;
-	bool isMovingRight;
-	bool isMovingLeft;
 
 
 public:

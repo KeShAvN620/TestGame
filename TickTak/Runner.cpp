@@ -1,13 +1,12 @@
+//Runner.cpp
 #include "Runner.h"
 
 Runner::Runner()
-	: windowMinWidth(0), windowMinHeight(0), windowMaxWidth(800), windowMaxHeight(600),
-	window(std::make_shared<sf::RenderWindow>(sf::VideoMode(windowMaxWidth, windowMaxHeight), "SFML works!")),
-	event(),backGroundPath(windowMinWidth, windowMaxWidth, windowMinHeight, windowMaxHeight), deltaTime(0){
+	:window(std::make_shared<sf::RenderWindow>(sf::VideoMode(static_cast<int>(GameMagicNumbers::windowMaxWidth),static_cast<int>(GameMagicNumbers::windowMaxHeight)), "SFML works!")),
+	event(),backGroundPath(GameMagicNumbers::windowMinWidth, GameMagicNumbers::windowMaxWidth, GameMagicNumbers::windowMinHeight, GameMagicNumbers::windowMaxHeight),
+	deltaTime(0.0f){
 	window->setFramerateLimit(60);
 }
-
-
 
 void Runner::SfmlEvent()
 {
@@ -21,7 +20,7 @@ void Runner::SfmlEvent()
 void Runner::Load()
 {
 	backGroundPath.Load();
-	player.Load();
+	gameObject.player->Load();
 	Update();
 }
 
@@ -30,7 +29,7 @@ void Runner::Update()
 	while (window->isOpen()) {
 	SfmlEvent();
 	Deltatime();
-	player.Update(deltaTime);
+	gameObject.player->Update(deltaTime);
 	Draw();
 	}
 }
@@ -38,7 +37,7 @@ void Runner::Update()
 void Runner::Draw()
 {
 	window->clear();
-	player.Draw(window);
+	gameObject.player->Draw(window);
 	backGroundPath.Draw(window);
 
 	window->display();
