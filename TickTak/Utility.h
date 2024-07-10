@@ -15,7 +15,7 @@ struct GameMagicNumbers {
     static constexpr unsigned int runFrame = 6;
     static constexpr unsigned int spriteSize = 32;
     static constexpr unsigned int zero = 0;
-    static constexpr unsigned int playerScale = 2;
+    static constexpr float playerScale = 1.75f;
 
     // for path or background path
     // formula to find the required scale   reqScale = maxDimension/(maxDimension - requiredDimension)
@@ -28,9 +28,23 @@ struct GameMagicNumbers {
 
 class Utiluty
 {
+private:
+    sf::FloatRect bounds1;
+    sf::FloatRect bounds2;
+private:
+    float overlapLeft;
+    float overlapRight;
+    float overlapTop;
+    float overlapBottom;
+private:
+    bool fromLeft;
+    bool fromRight;
+    bool fromTop;
+    bool fromBottom;
 public:
-	static void UpdateAnimation(sf::Sprite& animationSprite, unsigned int& animationCounter, std::vector<sf::IntRect>& animationFrame);
-	static bool AABBCollisionDetection(const sf::Sprite& sprite1, const sf::RectangleShape& sprite2);
+    Utiluty();
+	void UpdateAnimation(sf::Sprite& animationSprite, unsigned int& animationCounter, std::vector<sf::IntRect>& animationFrame);
+	bool PathPlayerCollidionDetection( sf::Sprite& sprite1, const sf::RectangleShape& sprite2,const sf::Vector2f& sprite2Size);
 };
 
 

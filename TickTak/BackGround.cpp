@@ -21,23 +21,15 @@ void BackGround::Load() {
  
 }
 
-void BackGround::Update()
-{
+void BackGround::Update(){
     CollisonDetection();
 }
 
-void BackGround::CollisonDetection()
-{
-    this->isCollidingWithPlayer = Utiluty::AABBCollisionDetection(gameObject.player->GetGlobalBoundry(), backGroundPath);
-    if (isCollidingWithPlayer) {
-        this->collosionText = "True";
-        if (gameObject.player->GetGlobalBoundry().getPosition().y + GameMagicNumbers::playerScale * GameMagicNumbers::spriteSize >= backGroundPath.getPosition().y) {
-            gameObject.player->GetGlobalBoundry().setPosition(gameObject.player->GetGlobalBoundry().getPosition().x,
-                backGroundPath.getPosition().y - GameMagicNumbers::playerScale *GameMagicNumbers::spriteSize);
-        }
-    }
-    else { collosionText = " False"; }
-       this->backgoundcollisionText.setString("Collision Happening with path = " + this->collosionText);
+void BackGround::CollisonDetection(){
+    sf::Vector2f playerCoordinate = gameObject.player->GetPlayerSprite().getPosition();
+    this->isCollidingWithPlayer = gameObject.utility.PathPlayerCollidionDetection(gameObject.player->GetPlayerSprite(), backGroundPath , pathSize);
+    this->collosionText = this->isCollidingWithPlayer == true ? " True" : "False";
+      this->backgoundcollisionText.setString("Collision Happening with path = " + this->collosionText + "  " +"; Player Coordinate = " + std::to_string(playerCoordinate.x) + " " + std::to_string(playerCoordinate.y));
 }
 
 void BackGround::Draw(std::shared_ptr<sf::RenderWindow> window) {

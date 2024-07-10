@@ -3,8 +3,8 @@
 #include"GameObject.h"
 
 Player::Player()
-	: speed(60.0f), playerSpeed(0.0f, 0.0f), scale(2.0f), counterLeft(0),
-	counterRight(0), counterIdle(0), isMovingRight(false), isMovingLeft(false),
+	: speed(60.0f), playerSpeed(0.0f, 0.0f), counterLeft(0),counterRight(0), 
+	counterIdle(0), isMovingRight(false), isMovingLeft(false),
 	animationTime(0), animationSpeed(8.0f * 0.0166667f) {
 	if (!texture.loadFromFile("Assets/Adventure/AD_IDLE_RUN_V1.png")) {
 		std::cout << "failed to load player texture " << std::endl;
@@ -25,7 +25,7 @@ Player::Player()
 
 void Player::Load(){
 	this->sprite.setPosition(sf::Vector2f(300.f, 300.f));
-	this->sprite.setScale(sf::Vector2f(scale, scale));
+	this->sprite.setScale(sf::Vector2f(GameMagicNumbers::playerScale, GameMagicNumbers::playerScale));
 }
 
 void Player::Update(float& deltaTime){
@@ -68,7 +68,7 @@ void Player::AnimationHandle(float& deltaTime) {
 				std::cerr << "Error: rightAnimation is empty!" << std::endl;
 			}
 			else {
-				Utiluty::UpdateAnimation(sprite, counterRight, rightAnimation);
+				gameObject.utility.UpdateAnimation(sprite, counterRight, rightAnimation);
 			}
 		}
 		else if (this->isMovingLeft) {
@@ -76,7 +76,7 @@ void Player::AnimationHandle(float& deltaTime) {
 				std::cerr << "Error: leftAnimation is empty!" << std::endl;
 			}
 			else {
-				Utiluty::UpdateAnimation(sprite, counterLeft, leftAnimation);
+				gameObject.utility.UpdateAnimation(sprite, counterLeft, leftAnimation);
 			}
 		}
 		else {
@@ -84,7 +84,7 @@ void Player::AnimationHandle(float& deltaTime) {
 				std::cerr << "Error: idleAnimation is empty!" << std::endl;
 			}
 			else {
-				Utiluty::UpdateAnimation(sprite, counterIdle, idleAnimation);
+				gameObject.utility.UpdateAnimation(sprite, counterIdle, idleAnimation);
 			}
 		}
 	}

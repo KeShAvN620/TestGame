@@ -25,7 +25,7 @@ private:
 public:
 	BackGround(const float& windowMinWidth, const float& windowMaxWidth, const float& windowMinHeight, const float& windowMaxHeight);
 public:
-	sf::RectangleShape& GetGlobalBoundry() { return backGroundPath; }
+	sf::RectangleShape& GetPathSprite() { return backGroundPath; }
 
 public:
 	void Load();

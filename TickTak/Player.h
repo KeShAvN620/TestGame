@@ -20,7 +20,6 @@ private:
 	float speed;
 	float animationTime;
 	float animationSpeed;
-	float scale;
 	bool isMovingRight;
 	bool isMovingLeft;
 	unsigned int counterLeft;
@@ -31,7 +30,7 @@ private:
 public:
 	Player();
 public:
-	sf::Sprite& GetGlobalBoundry() { return sprite;}
+	inline sf::Sprite& GetPlayerSprite() { return sprite;}
 public:
 	void Load();
 	void Update( float& deltaTime);
