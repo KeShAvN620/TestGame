@@ -3,7 +3,7 @@
 #include<iostream>
 #include <SFML/Graphics.hpp>
 #include<memory>
-
+#include<string>
 class BackGround
 {	
 	struct PathSpecification { // formula to find the required scale   reqScale = maxDimension/(maxDimension - requiredDimesion)
@@ -17,6 +17,11 @@ private:
 	sf::RectangleShape backGroundPath;
 	sf::Vector2f pathSize;
 	sf::Vector2f pathPosition;
+private:
+	bool isCollidingWithPlayer;
+	sf::Font font;
+	sf::Text backgoundcollisionText;
+	std::string collosionText;
 public:
 	BackGround(const float& windowMinWidth, const float& windowMaxWidth, const float& windowMinHeight, const float& windowMaxHeight);
 public:
@@ -24,6 +29,8 @@ public:
 
 public:
 	void Load();
+	void Update();
+	void CollisonDetection();
 	void Draw(std::shared_ptr<sf::RenderWindow> window);
 };
 

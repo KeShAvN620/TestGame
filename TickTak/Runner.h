@@ -3,7 +3,6 @@
 #include<iostream>
 #include <SFML/Graphics.hpp>
 #include<memory>
-#include"Utility.h"
 #include"GameObject.h"
 
 class Runner

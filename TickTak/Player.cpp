@@ -23,14 +23,12 @@ Player::Player()
 }
 
 
-void Player::Load()
-{
+void Player::Load(){
 	this->sprite.setPosition(sf::Vector2f(300.f, 300.f));
 	this->sprite.setScale(sf::Vector2f(scale, scale));
 }
 
-void Player::Update(float& deltaTime)
-{
+void Player::Update(float& deltaTime){
 	InputHandle(deltaTime);
 	AnimationHandle(deltaTime);
 	this->sprite.move(playerSpeed);
@@ -38,8 +36,7 @@ void Player::Update(float& deltaTime)
 }
 
 
-void Player::InputHandle(float& deltaTime)
-{
+void Player::InputHandle(float& deltaTime){
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 		this->playerSpeed.x =  -this->speed * deltaTime;
 		this->isMovingRight = false;
@@ -53,6 +50,12 @@ void Player::InputHandle(float& deltaTime)
 	else{
 		this->isMovingRight = false;
 		this->isMovingLeft = false;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+		this->playerSpeed.y = -this->speed * deltaTime;
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+		this->playerSpeed.y = this->speed * deltaTime;
 	}
 }
 
@@ -88,7 +91,6 @@ void Player::AnimationHandle(float& deltaTime) {
 }
 
 
-void Player::Draw(std::shared_ptr<sf::RenderWindow> window)
-{
+void Player::Draw(std::shared_ptr<sf::RenderWindow> window){
 	window->draw(this->sprite);
 }

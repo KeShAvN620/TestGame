@@ -7,34 +7,30 @@ Runner::Runner()
 	window->setFramerateLimit(60);
 }
 
-void Runner::SfmlEvent()
-{
-	while (window->pollEvent(event))
-	{
+void Runner::SfmlEvent(){
+	while (window->pollEvent(event)){
 		if (event.type == sf::Event::Closed)
 			window->close();
 	}	
 }
 
-void Runner::Load()
-{
+void Runner::Load(){
 	gameObject.backGroundPath->Load();
 	gameObject.player->Load();
 	Update();
 }
 
-void Runner::Update()
-{
+void Runner::Update(){
 	while (window->isOpen()) {
 	SfmlEvent();
 	Deltatime();
 	gameObject.player->Update(deltaTime);
+	gameObject.backGroundPath->Update();
 	Draw();
 	}
 }
 
-void Runner::Draw()
-{
+void Runner::Draw(){
 	window->clear();
 	gameObject.player->Draw(window);
 	gameObject.backGroundPath->Draw(window);
@@ -42,8 +38,7 @@ void Runner::Draw()
 	window->display();
 }
 
-inline void Runner::Deltatime()
-{
+inline void Runner::Deltatime(){
 	this->deltaTime = clock.restart().asSeconds();
 }
 

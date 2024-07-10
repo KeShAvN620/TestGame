@@ -13,8 +13,29 @@ void Utiluty::UpdateAnimation(sf::Sprite& animationSprite, unsigned int& animati
 }
 
 
-void Utiluty::AABBCollisionDetection(const sf::Sprite& sprite1, const sf::RectangleShape& sprite2){
+bool Utiluty::AABBCollisionDetection(const sf::Sprite& sprite1, const sf::RectangleShape& sprite2){
 	if (sprite1.getGlobalBounds().intersects(sprite2.getGlobalBounds())) {
-		// Handle collision
+		return true;
+	}
+	return false;
+}
+
+
+
+
+
+
+Font::Font(){
+	if (!font.loadFromFile("Assets/Fonts/arial.ttf")) {
+		std::cerr << "Error loading font\n";
+		return;
 	}
 }
+
+sf::Font Font::GetFont()
+{
+	return font;
+}
+
+
+
