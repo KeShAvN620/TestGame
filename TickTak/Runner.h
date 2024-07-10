@@ -3,13 +3,19 @@
 #include <SFML/Graphics.hpp>
 #include<memory>
 #include"Player.h"
+#include "BackGround.h"
+
 class Runner
 {
+	
+	float windowMinWidth , windowMinHeight , windowMaxWidth, windowMaxHeight;
 	std::shared_ptr<sf::RenderWindow> window;
 	sf::Event event;
 	sf::Clock clock;
-	Player player;
+	
 
+	BackGround backGroundPath;
+	Player player;
 private:
 	float deltaTime;
 

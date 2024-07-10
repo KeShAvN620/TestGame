@@ -28,7 +28,7 @@ void Player::Load()
 void Player::Update(float& deltaTime)
 {
 	InputHandle(deltaTime);
-	AnimationUpdate(deltaTime);
+	AnimationHandle(deltaTime);
 	this->sprite.move(playerSpeed);
 	this->playerSpeed = sf::Vector2f(0.0f, 0.0f);
 }
@@ -52,21 +52,18 @@ void Player::InputHandle(float& deltaTime)
 	}
 }
 
-void Player::AnimationUpdate(float& deltaTime){
+void Player::AnimationHandle(float& deltaTime){
 	this->animationTime += deltaTime;
 	if (this->animationTime >= this->animationSpeed) {
 		this->animationTime -= this->animationSpeed;
 		if (this->isMovingRight) {
-			counterRight = (this->counterRight + 1) % this->rightAnimation.size();
-			this->sprite.setTextureRect(this->rightAnimation[this->counterRight]);
+			Utiluty::UpdateAnimation(sprite, counterRight , rightAnimation);
 		}
 		else if (this->isMovingLeft) {
-			this->counterLeft = (this->counterLeft + 1) % this->leftAnimation.size();
-			this->sprite.setTextureRect(this->leftAnimation[this->counterLeft]);
+			Utiluty::UpdateAnimation(sprite, counterLeft, leftAnimation);
 		}
 		else {
-			this->counterIdle = (this->counterIdle + 1) % idleAnimation.size();
-			this->sprite.setTextureRect(this->idleAnimation[this->counterIdle]);
+			Utiluty::UpdateAnimation(sprite, counterIdle, idleAnimation);
 		}
 	}
 }

@@ -1,9 +1,10 @@
 #include "Runner.h"
 
-Runner::Runner() : window(std::make_shared<sf::RenderWindow>(sf::VideoMode(800, 600), "SFML works!")),
-					deltaTime(0) {
+Runner::Runner()
+	: windowMinWidth(0), windowMinHeight(0), windowMaxWidth(800), windowMaxHeight(600),
+	window(std::make_shared<sf::RenderWindow>(sf::VideoMode(windowMaxWidth, windowMaxHeight), "SFML works!")),
+	event(),backGroundPath(windowMinWidth, windowMaxWidth, windowMinHeight, windowMaxHeight), deltaTime(0){
 	window->setFramerateLimit(60);
-	
 }
 
 
@@ -19,6 +20,7 @@ void Runner::SfmlEvent()
 
 void Runner::Load()
 {
+	backGroundPath.Load();
 	player.Load();
 	Update();
 }
@@ -37,6 +39,7 @@ void Runner::Draw()
 {
 	window->clear();
 	player.Draw(window);
+	backGroundPath.Draw(window);
 
 	window->display();
 }
