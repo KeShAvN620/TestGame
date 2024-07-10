@@ -11,13 +11,10 @@ class Runner
 	std::shared_ptr<sf::RenderWindow> window;
 	sf::Event event;
 	sf::Clock clock;
-	BackGround backGroundPath;
 private:
 	float deltaTime;
-
 public:
 	Runner();
-
 public:
 	void SfmlEvent();
 	void Load();

@@ -3,8 +3,7 @@
 
 Runner::Runner()
 	:window(std::make_shared<sf::RenderWindow>(sf::VideoMode(static_cast<int>(GameMagicNumbers::windowMaxWidth),static_cast<int>(GameMagicNumbers::windowMaxHeight)), "SFML works!")),
-	event(),backGroundPath(GameMagicNumbers::windowMinWidth, GameMagicNumbers::windowMaxWidth, GameMagicNumbers::windowMinHeight, GameMagicNumbers::windowMaxHeight),
-	deltaTime(0.0f){
+	event(),deltaTime(0.0f){
 	window->setFramerateLimit(60);
 }
 
@@ -19,7 +18,7 @@ void Runner::SfmlEvent()
 
 void Runner::Load()
 {
-	backGroundPath.Load();
+	gameObject.backGroundPath->Load();
 	gameObject.player->Load();
 	Update();
 }
@@ -38,7 +37,7 @@ void Runner::Draw()
 {
 	window->clear();
 	gameObject.player->Draw(window);
-	backGroundPath.Draw(window);
+	gameObject.backGroundPath->Draw(window);
 
 	window->display();
 }
