@@ -1,14 +1,13 @@
 //Player.h
 #pragma once
-#include<iostream>
 #include <SFML/Graphics.hpp>
 #include<vector>
-#include"Utility.h"
 class Player
 {
 private:
 	sf::Texture texture;
 	sf::Sprite sprite;
+	sf::RectangleShape playerCollisionBox;
 
 private:
 	std::vector<sf::IntRect> idleAnimation;
@@ -31,11 +30,13 @@ public:
 	Player();
 public:
 	inline sf::Sprite& GetPlayerSprite() { return sprite;}
+	inline sf::RectangleShape& GetPlayerCollisionBox() { return playerCollisionBox;}
 public:
 	void Load();
 	void Update( float& deltaTime);
 	void InputHandle(float &deltaTime);
 	void AnimationHandle(float &deltatime);
+	void GravityAffect(const float &deltaTime);
 	void Draw(std::shared_ptr<sf::RenderWindow> window);
 
 };

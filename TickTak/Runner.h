@@ -1,8 +1,5 @@
 //Runner.h
 #pragma once
-#include<iostream>
-#include <SFML/Graphics.hpp>
-#include<memory>
 #include"GameObject.h"
 
 class Runner

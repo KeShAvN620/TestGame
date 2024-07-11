@@ -11,11 +11,15 @@ struct GameMagicNumbers {
     static constexpr float windowMaxHeight = 600.0f;
 
     // for player
+    static constexpr float gravity = 200.0f;
     static constexpr unsigned int idleFrame = 4;
     static constexpr unsigned int runFrame = 6;
     static constexpr unsigned int spriteSize = 32;
     static constexpr unsigned int zero = 0;
     static constexpr float playerScale = 1.75f;
+    static constexpr float collisionBoxThickness = 1.0f;
+    static constexpr float collisionBoxSizeScale = (3.1f / 4.0f);
+    static constexpr float collisionBoxPositionOffset = playerScale * ( 1 + 4.0f / playerScale);
 
     // for path or background path
     // formula to find the required scale   reqScale = maxDimension/(maxDimension - requiredDimension)
@@ -28,32 +32,11 @@ struct GameMagicNumbers {
 
 class Utiluty
 {
-private:
-    sf::FloatRect bounds1;
-    sf::FloatRect bounds2;
-private:
-    float overlapLeft;
-    float overlapRight;
-    float overlapTop;
-    float overlapBottom;
-private:
-    bool fromLeft;
-    bool fromRight;
-    bool fromTop;
-    bool fromBottom;
-public:
+    sf::Font font;
+    public:
     Utiluty();
-	void UpdateAnimation(sf::Sprite& animationSprite, unsigned int& animationCounter, std::vector<sf::IntRect>& animationFrame);
-	bool PathPlayerCollidionDetection( sf::Sprite& sprite1, const sf::RectangleShape& sprite2,const sf::Vector2f& sprite2Size);
+public:
+    sf::Font GetFont();
+    void UpdateAnimation(sf::Sprite& animationSprite, unsigned int& animationCounter, std::vector<sf::IntRect>& animationFrame);
 };
 
-
-
-class Font {
-private:
-     sf::Font font;
-public:
-    Font();
-public:
-     sf::Font GetFont();
-};

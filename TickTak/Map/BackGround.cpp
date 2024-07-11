@@ -1,12 +1,12 @@
 //Background.cpp
 #include "BackGround.h"
-#include"GameObject.h"
+#include"../GameObject.h"
 
 BackGround::BackGround(const float& windowMinWidth, const float& windowMaxWidth, const float& windowMinHeight, const float& windowMaxHeight)
-    :isCollidingWithPlayer(false), pathSize((windowMaxWidth - windowMinWidth) / Dimension.pathWidthSizeScale,
-        (windowMaxHeight - windowMinHeight) / Dimension.pathHeightSizeScale),
-    pathPosition(windowMaxWidth - (windowMaxWidth / Dimension.pathWidthPositionScale),
-        windowMaxHeight - (windowMaxHeight / Dimension.pathHeightPositionScale)), font(gameObject.font.GetFont()),
+    :isCollidingWithPlayer(false), pathSize((windowMaxWidth - windowMinWidth) / GameMagicNumbers::pathWidthSizeScale,
+        (windowMaxHeight - windowMinHeight) / GameMagicNumbers::pathHeightSizeScale),
+    pathPosition(windowMaxWidth - (windowMaxWidth / GameMagicNumbers::pathWidthPositionScale),
+        windowMaxHeight - (windowMaxHeight / GameMagicNumbers::pathHeightPositionScale)), font(gameObject.utility.GetFont()),
     collosionText("false"){
     this->backgoundcollisionText.setFont(font);
 }
@@ -27,9 +27,9 @@ void BackGround::Update(){
 
 void BackGround::CollisonDetection(){
     sf::Vector2f playerCoordinate = gameObject.player->GetPlayerSprite().getPosition();
-    this->isCollidingWithPlayer = gameObject.utility.PathPlayerCollidionDetection(gameObject.player->GetPlayerSprite(), backGroundPath , pathSize);
+    this->isCollidingWithPlayer = gameObject.collision.PathPlayerCollidionDetection(gameObject.player->GetPlayerCollisionBox(), backGroundPath, gameObject.player->GetPlayerSprite());
     this->collosionText = this->isCollidingWithPlayer == true ? " True" : "False";
-      this->backgoundcollisionText.setString("Collision Happening with path = " + this->collosionText + "  " +"; Player Coordinate = " + std::to_string(playerCoordinate.x) + " " + std::to_string(playerCoordinate.y));
+    this->backgoundcollisionText.setString("Collision Happening with path = " + this->collosionText + "  " +"; Player Coordinate = " + std::to_string(playerCoordinate.x) + " " + std::to_string(playerCoordinate.y));
 }
 
 void BackGround::Draw(std::shared_ptr<sf::RenderWindow> window) {
