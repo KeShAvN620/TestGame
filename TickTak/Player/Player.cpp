@@ -3,9 +3,9 @@
 #include"../GameObject.h"
 
 Player::Player()
-	: speed(100.0f), playerSpeed(0.0f, 0.0f), counterLeft(0),counterRight(0), 
-	counterIdle(0), isMovingRight(false), isMovingLeft(false),
-	animationTime(0), animationSpeed(8.0f * 0.0166667f) {
+	:deltaTime(0.0f), speed(150.0f), playerSpeed(0.0f, 0.0f), counterLeft(0),counterRight(0),
+	counterIdle(0), isMovingRight(false), isMovingLeft(false), isJumping(true),
+	animationTime(0), animationSpeed(8.0f * 0.0166667f), JumpTime(0), JumpRate(5.0f * 0.0166667f){
 	if (!texture.loadFromFile("Assets/Adventure/AD_IDLE_RUN_V2.png")) {
 		std::cout << "failed to load player texture " << std::endl;
 	}
@@ -27,79 +27,84 @@ Player::Player()
 
 
 void Player::Load(){
-	this->sprite.setPosition(sf::Vector2f(300.f, 300.f)); // random starting point todo change it by a GameMagicNumbers
+
+	this->sprite.setPosition(sf::Vector2f(200.f, -100.f)); // random starting point todo change it by a GameMagicNumbers
 	this->sprite.setScale(sf::Vector2f(GameMagicNumbers::playerScale, GameMagicNumbers::playerScale));
+	this->playerCollisionBox.setSize(sf::Vector2f(GameMagicNumbers::playerScale * GameMagicNumbers::spriteSize, GameMagicNumbers::playerScale * GameMagicNumbers::spriteSize));
+}
 
 
+void Player::Update( const float& deltaTime){
+	this->deltaTime = deltaTime;
+	InputHandle();
+	AnimationHandle();
+	GravityAffect();
+	InputJump();
+}
+
+void Player::GravityAffect() {
+	this->sprite.move(playerSpeed + gameObject.physic.AffectGravity(sprite, gameObject.backGroundPath->GetPathSprite(), deltaTime));
 	this->playerCollisionBox.setPosition(sprite.getPosition());
-	this->playerCollisionBox.setSize(sf::Vector2f(GameMagicNumbers::playerScale * GameMagicNumbers::spriteSize * GameMagicNumbers::collisionBoxSizeScale, GameMagicNumbers::playerScale * GameMagicNumbers::spriteSize));
+	this->playerSpeed = sf::Vector2f(0.0f, 0.0f);
 }
 
-void Player::Update(float& deltaTime){
-	InputHandle(deltaTime);
-	AnimationHandle(deltaTime);
-	GravityAffect(deltaTime);
+void Player::InputHandle(){
+	InputMovement();
+}
+void Player::AnimationHandle() {
+	AnimationMovement();
 }
 
-
-void Player::InputHandle(float& deltaTime){
+void Player::InputMovement()
+{
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-		this->playerSpeed.x = -this->speed * deltaTime;
+		this->playerSpeed.x = -this->speed * this->deltaTime;
 		this->isMovingRight = false;
 		this->isMovingLeft = true;
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-		this->playerSpeed.x = this->speed * deltaTime;
+		this->playerSpeed.x = this->speed * this->deltaTime;
 		this->isMovingRight = true;
 		this->isMovingLeft = false;
 	}
-	else{
+	else {
 		this->isMovingRight = false;
 		this->isMovingLeft = false;
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-		this->playerSpeed.y = -this->speed * deltaTime;
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-		this->playerSpeed.y = this->speed * deltaTime;
-	}
 }
 
-void Player::AnimationHandle(float& deltaTime) {
-	this->animationTime += deltaTime;
+void Player::AnimationMovement() {
+	this->animationTime += this->deltaTime;
 	if (this->animationTime >= this->animationSpeed) {
 		this->animationTime -= this->animationSpeed;
-		if (this->isMovingRight) {
-			if (rightAnimation.empty()) {
-				std::cerr << "Error: rightAnimation is empty!" << std::endl;
-			}
-			else {
-				gameObject.utility.UpdateAnimation(sprite, counterRight, rightAnimation);
-			}
-		}
-		else if (this->isMovingLeft) {
-			if (leftAnimation.empty()) {
-				std::cerr << "Error: leftAnimation is empty!" << std::endl;
-			}
-			else {
-				gameObject.utility.UpdateAnimation(sprite, counterLeft, leftAnimation);
-			}
+
+		if (this->isMovingLeft || this->isMovingRight) {
+			auto& animation = this->isMovingLeft ? this->leftAnimation : this->rightAnimation;
+			auto& counter = this->isMovingLeft ? this->counterLeft : this->counterRight;
+			gameObject.utility.UpdateAnimation(sprite, counter, animation);
+			//float desiredScale = this->isMovingLeft ? -GameMagicNumbers::playerScale : GameMagicNumbers::playerScale;
+			//sprite.setScale(desiredScale, GameMagicNumbers::playerScale);
 		}
 		else {
-			if (idleAnimation.empty()) {
-				std::cerr << "Error: idleAnimation is empty!" << std::endl;
-			}
-			else {
-				gameObject.utility.UpdateAnimation(sprite, counterIdle, idleAnimation);
-			}
+			gameObject.utility.UpdateAnimation(sprite, counterIdle, idleAnimation);
 		}
 	}
 }
 
-void Player::GravityAffect(const float& deltaTime){
-	this->sprite.move(playerSpeed + gameObject.physic.AffectGravity(sprite,gameObject.backGroundPath->GetPathSprite(), deltaTime));
-	this->playerCollisionBox.setPosition(sprite.getPosition() + sf::Vector2f(GameMagicNumbers::collisionBoxPositionOffset, 0.f));
-	this->playerSpeed = sf::Vector2f(0.0f, 0.0f);
+
+
+void Player::InputJump(){
+	//this->JumpTime += this->deltaTime;
+	//if (this->JumpRate <= this->JumpTime) {
+		//this->JumpTime -= this->JumpRate;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !this->isJumping) {
+			this->playerSpeed.y = -this->speed * this->deltaTime * 50;
+			this->isJumping = true;
+		}
+		else if(sprite.getGlobalBounds().intersects(gameObject.backGroundPath->GetPathSprite().getGlobalBounds())) {
+			this->isJumping = false;
+		}
+	//}
 }
 
 void Player::Draw(std::shared_ptr<sf::RenderWindow> window){

@@ -39,8 +39,8 @@ bool Collision::PathPlayerCollidionDetection(sf::RectangleShape& sprite1, const 
         if (fromLeft == false && fromRight == false && fromTop == false && fromBottom == false) { return false; }
 
         // Resolve collision based on the side 
-        if (fromLeft) { sprite3.setPosition(bounds2.left - bounds1.width - GameMagicNumbers::collisionBoxPositionOffset, sprite3.getPosition().y); }
-        else if (fromRight) { sprite3.setPosition(bounds2.left + bounds2.width + errorManagement - GameMagicNumbers::collisionBoxPositionOffset, sprite3.getPosition().y); }
+        if (fromLeft) { sprite3.setPosition(bounds2.left -errorManagement - bounds1.width, sprite3.getPosition().y); }
+        else if (fromRight) { sprite3.setPosition(bounds2.left + bounds2.width + errorManagement, sprite3.getPosition().y); }
         else if (fromTop) { sprite3.setPosition(sprite3.getPosition().x, bounds2.top - bounds1.height); }
         else if (fromBottom) { sprite3.setPosition(sprite3.getPosition().x, bounds2.top + bounds2.height + errorManagement); }
         return true;

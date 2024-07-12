@@ -16,14 +16,18 @@ private:
 	sf::Vector2f playerSpeed;
 
 private:
+	float deltaTime;
 	float speed;
 	float animationTime;
 	float animationSpeed;
 	bool isMovingRight;
 	bool isMovingLeft;
+	bool isJumping;
 	unsigned int counterLeft;
 	unsigned int counterRight;
 	unsigned int counterIdle;
+	float JumpTime;
+	float JumpRate;
 
 
 public:
@@ -33,10 +37,13 @@ public:
 	inline sf::RectangleShape& GetPlayerCollisionBox() { return playerCollisionBox;}
 public:
 	void Load();
-	void Update( float& deltaTime);
-	void InputHandle(float &deltaTime);
-	void AnimationHandle(float &deltatime);
-	void GravityAffect(const float &deltaTime);
+	void Update( const float& deltatime);
+	void GravityAffect();
+	void InputHandle();
+	void AnimationHandle();
+	void InputMovement();
+	void AnimationMovement();
+	void InputJump();
 	void Draw(std::shared_ptr<sf::RenderWindow> window);
 
 };
