@@ -1,7 +1,7 @@
 #include"Collision.h"
 
 Collision::Collision() : bounds1(), bounds2(), overlapLeft(0.0f), overlapRight(0.0f), overlapTop(0.0f), overlapBottom(0.0f),
-fromLeft(false), fromRight(false), fromTop(false), fromBottom(false), errorManagement(1)
+fromLeft(false), fromRight(false), fromTop(false), fromBottom(false)
 {}
 
 void Collision::UpdateAnimation(sf::Sprite& animationSprite, unsigned int& animationCounter, std::vector<sf::IntRect>& animationFrame) {
@@ -39,10 +39,10 @@ bool Collision::PathPlayerCollidionDetection(sf::RectangleShape& sprite1, const 
         if (fromLeft == false && fromRight == false && fromTop == false && fromBottom == false) { return false; }
 
         // Resolve collision based on the side 
-        if (fromLeft) { sprite3.setPosition(bounds2.left -errorManagement - bounds1.width, sprite3.getPosition().y); }
-        else if (fromRight) { sprite3.setPosition(bounds2.left + bounds2.width + errorManagement, sprite3.getPosition().y); }
+        if (fromLeft) { sprite3.setPosition(bounds2.left - GameMagicNumbers::errorManagement - bounds1.width - GameMagicNumbers::collisionBoxPositionOffset, sprite3.getPosition().y); }
+        else if (fromRight) { sprite3.setPosition(bounds2.left + bounds2.width + GameMagicNumbers::errorManagement - GameMagicNumbers::collisionBoxPositionOffset, sprite3.getPosition().y); }
         else if (fromTop) { sprite3.setPosition(sprite3.getPosition().x, bounds2.top - bounds1.height); }
-        else if (fromBottom) { sprite3.setPosition(sprite3.getPosition().x, bounds2.top + bounds2.height + errorManagement); }
+        else if (fromBottom) { sprite3.setPosition(sprite3.getPosition().x, bounds2.top + bounds2.height + GameMagicNumbers::errorManagement); }
         return true;
     }
     return false;

@@ -30,7 +30,7 @@ void Player::Load(){
 
 	this->sprite.setPosition(sf::Vector2f(200.f, -100.f)); // random starting point todo change it by a GameMagicNumbers
 	this->sprite.setScale(sf::Vector2f(GameMagicNumbers::playerScale, GameMagicNumbers::playerScale));
-	this->playerCollisionBox.setSize(sf::Vector2f(GameMagicNumbers::playerScale * GameMagicNumbers::spriteSize, GameMagicNumbers::playerScale * GameMagicNumbers::spriteSize));
+	this->playerCollisionBox.setSize(sf::Vector2f(GameMagicNumbers::playerScale * GameMagicNumbers::spriteSize * GameMagicNumbers::collisionBoxSizeScale, GameMagicNumbers::playerScale * GameMagicNumbers::spriteSize));
 }
 
 
@@ -38,13 +38,13 @@ void Player::Update( const float& deltaTime){
 	this->deltaTime = deltaTime;
 	InputHandle();
 	AnimationHandle();
-	GravityAffect();
 	InputJump();
+	GravityAffect();
 }
 
 void Player::GravityAffect() {
-	this->sprite.move(playerSpeed + gameObject.physic.AffectGravity(sprite, gameObject.backGroundPath->GetPathSprite(), deltaTime));
-	this->playerCollisionBox.setPosition(sprite.getPosition());
+	this->sprite.move(playerSpeed + gameObject.physic.AffectGravity(playerCollisionBox, gameObject.backGroundPath->GetPathSprite(), deltaTime));
+	this->playerCollisionBox.setPosition(sprite.getPosition() + sf::Vector2f(GameMagicNumbers::collisionBoxPositionOffset, 0));
 	this->playerSpeed = sf::Vector2f(0.0f, 0.0f);
 }
 

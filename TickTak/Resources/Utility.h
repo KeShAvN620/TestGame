@@ -16,10 +16,12 @@ struct GameMagicNumbers {
     static constexpr unsigned int runFrame = 6;
     static constexpr unsigned int spriteSize = 32;
     static constexpr unsigned int zero = 0;
+    static constexpr int errorManagement = 1;
     static constexpr float playerScale = 1.75f;
     static constexpr float collisionBoxThickness = 1.0f;
     static constexpr float collisionBoxSizeScale = (3.1f / 4.0f);
     static constexpr float collisionBoxPositionOffset = playerScale * ( 1 + 4.0f / playerScale);
+    
 
     // for path or background path
     // formula to find the required scale   reqScale = maxDimension/(maxDimension - requiredDimension)

@@ -17,7 +17,6 @@ private:
     bool fromRight;
     bool fromTop;
     bool fromBottom;
-    int errorManagement; // here  +1 is error management for collosion from bottom and right
 public:
     Collision();
     void UpdateAnimation(sf::Sprite& animationSprite, unsigned int& animationCounter, std::vector<sf::IntRect>& animationFrame);
