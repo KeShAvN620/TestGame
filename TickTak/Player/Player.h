@@ -14,6 +14,7 @@ private:
 	std::vector<sf::IntRect> rightAnimation;
 	std::vector<sf::IntRect> leftAnimation;
 	sf::Vector2f playerSpeed;
+	sf::Vector2f gravity;
 
 private:
 	float deltaTime;
@@ -26,8 +27,8 @@ private:
 	unsigned int counterLeft;
 	unsigned int counterRight;
 	unsigned int counterIdle;
-	float JumpTime;
-	float JumpRate;
+	float jumpTime;
+	float jumpRate;
 
 
 public:

@@ -20,5 +20,5 @@ private:
 public:
     Collision();
     void UpdateAnimation(sf::Sprite& animationSprite, unsigned int& animationCounter, std::vector<sf::IntRect>& animationFrame);
-    bool PathPlayerCollidionDetection(sf::RectangleShape& sprite1, const sf::RectangleShape& sprite2, sf::Sprite& sprite3);
+    bool PathPlayerCollidionDetection(const sf::RectangleShape& sprite1, const sf::RectangleShape& sprite2, sf::Sprite& sprite3);
 };
