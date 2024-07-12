@@ -6,7 +6,7 @@ Player::Player()
 	:deltaTime(0.0f), speed(150.0f), playerSpeed(0.0f, 0.0f), counterLeft(0),counterRight(0),
 	counterIdle(0), isMovingRight(false), isMovingLeft(false), isJumping(true),
 	animationTime(0), animationSpeed(8.0f * 0.0166667f), JumpTime(0), JumpRate(5.0f * 0.0166667f){
-	if (!texture.loadFromFile("Assets/Adventure/AD_IDLE_RUN_V2.png")) {
+	if (!texture.loadFromFile("Assets/Adventure/newSpriteplayer1.png")) {
 		std::cout << "failed to load player texture " << std::endl;
 	}
 	for (unsigned int i = 0; i < GameMagicNumbers::idleFrame; i++) {
@@ -50,6 +50,7 @@ void Player::GravityAffect() {
 
 void Player::InputHandle(){
 	InputMovement();
+	InputJump();
 }
 void Player::AnimationHandle() {
 	AnimationMovement();
@@ -79,11 +80,10 @@ void Player::AnimationMovement() {
 		this->animationTime -= this->animationSpeed;
 
 		if (this->isMovingLeft || this->isMovingRight) {
-			auto& animation = this->isMovingLeft ? this->leftAnimation : this->rightAnimation;
 			auto& counter = this->isMovingLeft ? this->counterLeft : this->counterRight;
-			gameObject.utility.UpdateAnimation(sprite, counter, animation);
-			//float desiredScale = this->isMovingLeft ? -GameMagicNumbers::playerScale : GameMagicNumbers::playerScale;
-			//sprite.setScale(desiredScale, GameMagicNumbers::playerScale);
+			gameObject.utility.UpdateAnimation(sprite, counter, rightAnimation);
+			float desiredScale = this->isMovingLeft ? -GameMagicNumbers::playerScale : GameMagicNumbers::playerScale;
+			sprite.setScale(desiredScale, GameMagicNumbers::playerScale);
 		}
 		else {
 			gameObject.utility.UpdateAnimation(sprite, counterIdle, idleAnimation);
@@ -101,7 +101,7 @@ void Player::InputJump(){
 			this->playerSpeed.y = -this->speed * this->deltaTime * 50;
 			this->isJumping = true;
 		}
-		else if(sprite.getGlobalBounds().intersects(gameObject.backGroundPath->GetPathSprite().getGlobalBounds())) {
+		else if(playerCollisionBox.getGlobalBounds().intersects(gameObject.backGroundPath->GetPathSprite().getGlobalBounds())) {
 			this->isJumping = false;
 		}
 	//}
