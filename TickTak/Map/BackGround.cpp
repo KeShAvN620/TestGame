@@ -22,6 +22,7 @@ void BackGround::Load() {
 }
 
 void BackGround::Update(){
+    CollisionOfJump();
     CollisonDetection();
 }
 
@@ -29,7 +30,15 @@ void BackGround::CollisonDetection(){
     sf::Vector2f playerCoordinate = gameObject.player->GetPlayerSprite().getPosition();
     this->isCollidingWithPlayer = gameObject.collision.PathPlayerCollidionDetection(gameObject.player->GetPlayerCollisionBox(), backGroundPath, gameObject.player->GetPlayerSprite());
     this->collosionText = this->isCollidingWithPlayer == true ? " True" : "False";
-    this->backgoundcollisionText.setString("Collision Happening with path = " + this->collosionText + "  " +"; Player Coordinate = " + std::to_string(playerCoordinate.x) + " " + std::to_string(playerCoordinate.y));
+    this->backgoundcollisionText.setString("Collision Happening with path = " + this->collosionText + "  " +"; Player Coordinate = " + std::to_string(int(playerCoordinate.x)) + " " + std::to_string(int(playerCoordinate.y)));
+}
+
+void BackGround::CollisionOfJump() {
+    if (gameObject.player->IsJumping()) {
+        if (gameObject.player->GetPlayerCollisionBox().getGlobalBounds().intersects(backGroundPath.getGlobalBounds())) {
+            gameObject.player->IsJumping() = false;
+        }
+    }
 }
 
 void BackGround::Draw(std::shared_ptr<sf::RenderWindow> window) {

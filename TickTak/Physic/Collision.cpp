@@ -40,7 +40,7 @@ bool Collision::PathPlayerCollidionDetection(const sf::RectangleShape& sprite1, 
             sprite3.setPosition(bounds2.left + bounds2.width + bounds1.width / 2 + GameMagicNumbers::errorManagement, sprite3.getPosition().y);
         }
         else if (fromTop) {
-            sprite3.setPosition(sprite3.getPosition().x, bounds2.top - GameMagicNumbers::errorManagement - bounds1.height / 2);
+            sprite3.setPosition(sprite3.getPosition().x, bounds2.top + GameMagicNumbers::errorManagement - bounds1.height / 2);
         }
         else if (fromBottom) {
             sprite3.setPosition(sprite3.getPosition().x, bounds2.top + GameMagicNumbers::errorManagement + bounds2.height + bounds1.height / 2 );

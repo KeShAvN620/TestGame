@@ -24,6 +24,7 @@ public:
 	void Load();
 	void Update();
 	void CollisonDetection();
+	void CollisionOfJump();
 	void Draw(std::shared_ptr<sf::RenderWindow> window);
 };
 

@@ -4,7 +4,7 @@
 Runner::Runner()
 	:window(std::make_shared<sf::RenderWindow>(sf::VideoMode(static_cast<int>(GameMagicNumbers::windowMaxWidth),static_cast<int>(GameMagicNumbers::windowMaxHeight)), "SFML works!")),
 	event(),deltaTime(0.0f){
-	window->setFramerateLimit(60);
+	window->setFramerateLimit(GameMagicNumbers::maxFrameRate);
 }
 
 void Runner::SfmlEvent(){
@@ -24,8 +24,8 @@ void Runner::Update(){
 	while (window->isOpen()) {
 	SfmlEvent();
 	Deltatime();
-	gameObject.player->Update(deltaTime);
 	gameObject.backGroundPath->Update();
+	gameObject.player->Update(deltaTime);
 	Draw();
 	}
 }

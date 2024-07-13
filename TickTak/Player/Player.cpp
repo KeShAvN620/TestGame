@@ -4,8 +4,8 @@
 
 Player::Player()
 	: deltaTime(0.0f), speed(150.0f), playerSpeed(0.0f, 0.0f), counterLeft(0), counterRight(0),
-	counterIdle(0), isMovingRight(false), isMovingLeft(false), isJumping(true),
-	animationTime(0), animationSpeed(8.0f * 0.0166667f), jumpTime(0), jumpRate(5.0f * 0.0166667f) {
+	counterIdle(0), isMovingRight(false), isMovingLeft(false), isJumping(false), isJumpBoost(false),
+	animationTime(0), animationSpeed(8.0f * 0.0166667f), jumpTime(0), jumpRate(50.0f * 0.0166667f) {
 
 	if (!texture.loadFromFile("Assets/Adventure/newSpriteplayer1.png")) {
 		std::cout << "failed to load player texture " << std::endl;
@@ -18,14 +18,14 @@ Player::Player()
 		this->rightAnimation.push_back(sf::IntRect(i * GameMagicNumbers::spriteSize, GameMagicNumbers::spriteSize, GameMagicNumbers::spriteSize, GameMagicNumbers::spriteSize));
 	}
 	for (unsigned int i = 0; i < GameMagicNumbers::runFrame; i++) {
-		this->leftAnimation.push_back(sf::IntRect(i * GameMagicNumbers::spriteSize, 2 * GameMagicNumbers::spriteSize, GameMagicNumbers::spriteSize, GameMagicNumbers::spriteSize));
+		this->jumpAnimation.push_back(sf::IntRect(i * GameMagicNumbers::spriteSize, 2 * GameMagicNumbers::spriteSize, GameMagicNumbers::spriteSize, GameMagicNumbers::spriteSize));
 	}
 
 	this->sprite.setTexture(texture);
 	this->sprite.setTextureRect(this->idleAnimation[GameMagicNumbers::zero]);
 
 	this->playerCollisionBox.setOutlineThickness(GameMagicNumbers::collisionBoxThickness);
-	this->playerCollisionBox.setOutlineColor(sf::Color::Blue);
+	this->playerCollisionBox.setOutlineColor(sf::Color::Red);
 	this->playerCollisionBox.setFillColor(sf::Color::Transparent);
 	this->playerCollisionBox.setSize(sf::Vector2f(GameMagicNumbers::playerScale * GameMagicNumbers::spriteSize * GameMagicNumbers::collisionBoxSizeScale, GameMagicNumbers::playerScale * GameMagicNumbers::spriteSize));
 
@@ -45,10 +45,10 @@ void Player::Load() {
 
 void Player::Update( const float& deltaTime){
 	this->deltaTime = deltaTime;
+	GravityAffect();
 	InputHandle();
 	AnimationHandle();
 	InputJump();
-	GravityAffect();
 }
 
 void Player::GravityAffect() {
@@ -64,6 +64,7 @@ void Player::InputHandle(){
 }
 void Player::AnimationHandle() {
 	AnimationMovement();
+	JumpAnimation();
 }
 
 void Player::InputMovement()
@@ -92,36 +93,45 @@ void Player::InputMovement()
 }
 
 void Player::AnimationMovement() {
-	this->animationTime += this->deltaTime;
-	if (this->animationTime >= this->animationSpeed) {
-		this->animationTime -= this->animationSpeed;
+	if (!isJumping) {
+		this->animationTime += this->deltaTime;
+		if (this->animationTime >= this->animationSpeed) {
+			this->animationTime -= this->animationSpeed;
 
-		if (this->isMovingLeft || this->isMovingRight) {
-			auto& counter = this->isMovingLeft ? this->counterLeft : this->counterRight;
-			gameObject.utility.UpdateAnimation(sprite, counter, rightAnimation);
-			float desiredScale = this->isMovingLeft ? -GameMagicNumbers::playerScale : GameMagicNumbers::playerScale;
-			sprite.setScale(desiredScale, GameMagicNumbers::playerScale);
-		}
-		else {
-			gameObject.utility.UpdateAnimation(sprite, counterIdle, idleAnimation);
+			if (this->isMovingLeft || this->isMovingRight) {
+				auto& counter = this->isMovingLeft ? this->counterLeft : this->counterRight;
+				gameObject.utility.UpdateAnimation(sprite, counter, rightAnimation);
+			}
+			else {
+				gameObject.utility.UpdateAnimation(sprite, counterIdle, idleAnimation);
+			}
 		}
 	}
+	float desiredScale = this->isMovingLeft ? -GameMagicNumbers::playerScale : GameMagicNumbers::playerScale;
+	sprite.setScale(desiredScale, GameMagicNumbers::playerScale);
 }
 
 
 
 void Player::InputJump(){
-	//this->JumpTime += this->deltaTime;
-	//if (this->JumpRate <= this->JumpTime) {
-		//this->JumpTime -= this->JumpRate;
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !this->isJumping) {
-			this->playerSpeed.y = -this->speed * this->deltaTime * 50;
 			this->isJumping = true;
+			this->isJumpBoost = true;
+			this->jumpTime = 0;
 		}
-		else if(playerCollisionBox.getGlobalBounds().intersects(gameObject.backGroundPath->GetPathSprite().getGlobalBounds())) {
-			this->isJumping = false;
+		
+		
+		if (isJumpBoost) {
+			this->jumpTime += this->deltaTime;
+			this->playerSpeed.y = (this->jumpTime <= this->jumpRate) ? -GameMagicNumbers::gravityCounter * this->deltaTime : 0;
+			this->isJumpBoost = (this->jumpTime <= this->jumpRate);
 		}
-	//}
+}
+
+void Player::JumpAnimation(){
+	if (isJumping) {
+		this->sprite.setTextureRect(this->jumpAnimation[GameMagicNumbers::errorManagement]);//error management is just a alias for texture 1
+	}
 }
 
 void Player::Draw(std::shared_ptr<sf::RenderWindow> window){
