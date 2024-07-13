@@ -30,6 +30,9 @@ private:
 	unsigned int counterIdle;
 	float jumpTime;
 	float jumpRate;
+	unsigned int jumpAnimationcounter;
+	float jumpAnimationTime;
+	float jumpAnimationRate;
 
 
 public:

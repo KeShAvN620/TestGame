@@ -5,9 +5,10 @@
 Player::Player()
 	: deltaTime(0.0f), speed(150.0f), playerSpeed(0.0f, 0.0f), counterLeft(0), counterRight(0),
 	counterIdle(0), isMovingRight(false), isMovingLeft(false), isJumping(false), isJumpBoost(false),
-	animationTime(0), animationSpeed(8.0f * 0.0166667f), jumpTime(0), jumpRate(50.0f * 0.0166667f) {
+	animationTime(0), animationSpeed(8.0f * 0.0166667f), jumpTime(0), jumpRate(50.0f * 0.0166667f),
+	jumpAnimationcounter(0) , jumpAnimationRate(18.0f * 0.0166667f) , jumpAnimationTime(0){
 
-	if (!texture.loadFromFile("Assets/Adventure/newSpriteplayer1.png")) {
+	if (!texture.loadFromFile("Assets/Adventure/newSpriteplayer.png")) {
 		std::cout << "failed to load player texture " << std::endl;
 	}
 
@@ -25,7 +26,7 @@ Player::Player()
 	this->sprite.setTextureRect(this->idleAnimation[GameMagicNumbers::zero]);
 
 	this->playerCollisionBox.setOutlineThickness(GameMagicNumbers::collisionBoxThickness);
-	this->playerCollisionBox.setOutlineColor(sf::Color::Red);
+	this->playerCollisionBox.setOutlineColor(sf::Color::Transparent);
 	this->playerCollisionBox.setFillColor(sf::Color::Transparent);
 	this->playerCollisionBox.setSize(sf::Vector2f(GameMagicNumbers::playerScale * GameMagicNumbers::spriteSize * GameMagicNumbers::collisionBoxSizeScale, GameMagicNumbers::playerScale * GameMagicNumbers::spriteSize));
 
@@ -52,7 +53,6 @@ void Player::Update( const float& deltaTime){
 }
 
 void Player::GravityAffect() {
-	//this->sprite.move(playerSpeed);
 	this->sprite.move(playerSpeed + gameObject.physic.AffectGravity(playerCollisionBox, gameObject.backGroundPath->GetPathSprite(), deltaTime));
 	this->playerCollisionBox.setPosition(sprite.getPosition());
 	this->playerSpeed = sf::Vector2f(0.0f, 0.0f);
@@ -113,26 +113,31 @@ void Player::AnimationMovement() {
 
 
 
-void Player::InputJump(){
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !this->isJumping) {
-			this->isJumping = true;
-			this->isJumpBoost = true;
-			this->jumpTime = 0;
-		}
-		
-		
-		if (isJumpBoost) {
-			this->jumpTime += this->deltaTime;
-			this->playerSpeed.y = (this->jumpTime <= this->jumpRate) ? -GameMagicNumbers::gravityCounter * this->deltaTime : 0;
-			this->isJumpBoost = (this->jumpTime <= this->jumpRate);
-		}
-}
-
-void Player::JumpAnimation(){
-	if (isJumping) {
-		this->sprite.setTextureRect(this->jumpAnimation[GameMagicNumbers::errorManagement]);//error management is just a alias for texture 1
+void Player::InputJump() {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !this->isJumping) {
+		this->isJumping = true;
+		this->isJumpBoost = true;
+		this->jumpTime = GameMagicNumbers::zero;
+		jumpAnimationcounter = GameMagicNumbers::zero;
+	}
+	if (isJumpBoost) {
+		this->jumpTime += this->deltaTime;
+		this->playerSpeed.y = (this->jumpTime <= this->jumpRate) ? -GameMagicNumbers::gravityCounter * this->deltaTime : GameMagicNumbers::zero;
+		this->isJumpBoost = (this->jumpTime <= this->jumpRate);
 	}
 }
+
+
+void Player::JumpAnimation(){
+	if (this->isJumping) {
+		this->jumpAnimationTime += this->deltaTime;
+		if (this->jumpAnimationTime >= this->jumpAnimationRate) {
+			this->jumpAnimationTime -= this->jumpAnimationRate;
+			gameObject.utility.UpdateAnimation(sprite, jumpAnimationcounter, jumpAnimation);
+		}
+	}
+}
+
 
 void Player::Draw(std::shared_ptr<sf::RenderWindow> window){
 	window->draw(this->sprite);
