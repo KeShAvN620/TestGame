@@ -20,6 +20,6 @@ private:
 public:
 	Physic();
 public:
-	sf::Vector2f AffectGravity(const sf::RectangleShape collisionBox, const sf::RectangleShape& path ,const float& deltatime);
+	bool AffectGravity(const sf::RectangleShape collisionBox, const sf::RectangleShape& path);
 };
 

@@ -15,16 +15,20 @@ private:
 	std::vector<sf::IntRect> jumpAnimation;
 	sf::Vector2f playerSpeed;
 	sf::Vector2f gravity;
+	sf::Vector2f counterGravity;
 
 private:
 	float deltaTime;
 	float speed;
 	float animationTime;
 	float animationSpeed;
+private:
 	bool isMovingRight;
 	bool isMovingLeft;
 	bool isJumping;
 	bool isJumpBoost;
+	bool isGravityAffecting;
+private:
 	unsigned int counterLeft;
 	unsigned int counterRight;
 	unsigned int counterIdle;
@@ -41,9 +45,15 @@ public:
 	inline sf::Sprite& GetPlayerSprite() { return sprite;}
 	inline sf::RectangleShape& GetPlayerCollisionBox() { return playerCollisionBox;}
 	inline bool& IsJumping() { return isJumping; }
+	inline bool& IsGravityAffecting() {return isGravityAffecting;}
+	inline sf::Vector2f& GetGravity() { return gravity; }
+	inline sf::Vector2f& GetCounterGravity() { return counterGravity; }
 public:
 	void Load();
 	void Update( const float& deltatime);
+	void Draw(std::shared_ptr<sf::RenderWindow> window);
+private:
+	void ReInitializer();
 	void GravityAffect();
 	void InputHandle();
 	void AnimationHandle();
@@ -51,6 +61,5 @@ public:
 	void AnimationMovement();
 	void InputJump();
 	void JumpAnimation();
-	void Draw(std::shared_ptr<sf::RenderWindow> window);
 };
 

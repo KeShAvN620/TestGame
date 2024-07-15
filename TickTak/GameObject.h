@@ -1,6 +1,7 @@
 //GameObject.h
 #pragma once
 #include<iostream>
+#include<vector>
 #include<memory>
 #include"Player/Player.h"
 #include"Map/BackGround.h"
@@ -15,6 +16,7 @@ struct GameObject
 	Collision collision;
 	Physic physic;
 	std::shared_ptr<Player> player = std::make_shared<Player>();
-	std::shared_ptr<BackGround> backGroundPath = std::make_shared<BackGround>(GameMagicNumbers::windowMinWidth, GameMagicNumbers::windowMaxWidth, GameMagicNumbers::windowMinHeight, GameMagicNumbers::windowMaxHeight);
+	std::shared_ptr<BackGround> backGroundPath = std::make_shared<BackGround>(GameMagicNumbers::pathWidthPositionScale , GameMagicNumbers::pathHeightPositionScale);
+	std::shared_ptr<BackGround> backGroundPath1 = std::make_shared<BackGround>( 0.8973f,1/3.0f);
 }; 
 extern GameObject gameObject;

@@ -18,7 +18,11 @@ private:
     bool fromTop;
     bool fromBottom;
 public:
+    inline bool CollisionOnTop(){ return fromTop; }
+    inline bool CollisionOnBottom() { return fromBottom; }
+public:
     Collision();
+    void CollisionReseter();
     void UpdateAnimation(sf::Sprite& animationSprite, unsigned int& animationCounter, std::vector<sf::IntRect>& animationFrame);
     bool PathPlayerCollidionDetection(const sf::RectangleShape& sprite1, const sf::RectangleShape& sprite2, sf::Sprite& sprite3);
 };

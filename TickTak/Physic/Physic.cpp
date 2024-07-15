@@ -3,8 +3,7 @@
 Physic::Physic():gravity(0,GameMagicNumbers::gravity), velocityOfGravity(0,0) , overlapLeft(0), overlapRight(0), overlapTop(0), overlapBottom(0) 
 , fromTop(false){}
 
-sf::Vector2f Physic::AffectGravity(const sf::RectangleShape collisionBox, const sf::RectangleShape& path, const float& deltaTime) {
-	velocityOfGravity = gravity * deltaTime;
+bool Physic::AffectGravity(const sf::RectangleShape collisionBox, const sf::RectangleShape& path) {
     bounds1 = collisionBox.getGlobalBounds();
     bounds2 = path.getGlobalBounds();
     if (bounds1.intersects(bounds2)) {
@@ -15,9 +14,8 @@ sf::Vector2f Physic::AffectGravity(const sf::RectangleShape collisionBox, const 
 
         fromTop = (overlapTop < overlapBottom && overlapTop < overlapLeft && overlapTop < overlapRight);
         if (fromTop) { 
-            velocityOfGravity.y = GameMagicNumbers::errorManagement;
-            return velocityOfGravity; 
+            return false; 
         }
     }
-    return velocityOfGravity;
+    return true;
 }

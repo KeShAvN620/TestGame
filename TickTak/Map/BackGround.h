@@ -16,7 +16,7 @@ private:
 	sf::Text backgoundcollisionText;
 	std::string collosionText;
 public:
-	BackGround(const float& windowMinWidth, const float& windowMaxWidth, const float& windowMinHeight, const float& windowMaxHeight);
+	BackGround(const float pathWidthPositionScale, const float pathHeightPositionScale);
 public:
 	sf::RectangleShape& GetPathSprite() { return backGroundPath; }
 	bool& IsCollisionWithPath() { return isCollidingWithPlayer; }
@@ -24,7 +24,6 @@ public:
 	void Load();
 	void Update();
 	void CollisonDetection();
-	void CollisionOfJump();
 	void Draw(std::shared_ptr<sf::RenderWindow> window);
 };
 
