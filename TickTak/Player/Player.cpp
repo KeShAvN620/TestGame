@@ -29,7 +29,7 @@ Player::Player()
 	this->playerCollisionBox.setOutlineThickness(GameMagicNumbers::collisionBoxThickness);
 	this->playerCollisionBox.setOutlineColor(sf::Color::Red);
 	this->playerCollisionBox.setFillColor(sf::Color::Transparent);
-	this->playerCollisionBox.setSize(sf::Vector2f(GameMagicNumbers::playerScale * GameMagicNumbers::spriteSize * GameMagicNumbers::collisionBoxSizeScale, GameMagicNumbers::playerScale * GameMagicNumbers::spriteSize));
+	this->playerCollisionBox.setSize(sf::Vector2f(GameMagicNumbers::collisionBoxSizeX,GameMagicNumbers::collisionBoxSizeY));
 
 	this->sprite.setOrigin(this->sprite.getGlobalBounds().width / 2, this->sprite.getGlobalBounds().height / 2);
 	this->playerCollisionBox.setOrigin(this->playerCollisionBox.getGlobalBounds().width / 2, this->playerCollisionBox.getGlobalBounds().height/ 2);

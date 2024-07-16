@@ -23,7 +23,6 @@ bool Collision::PathPlayerCollidionDetection(const sf::RectangleShape& sprite1, 
     // Get bounding boxes of the sprites
     bounds1 = sprite1.getGlobalBounds();
     bounds2 = sprite2.getGlobalBounds();
-
     if (bounds1.intersects(bounds2)) {
         overlapLeft = bounds1.left + bounds1.width - bounds2.left;
         overlapRight = bounds2.left + bounds2.width - bounds1.left;
@@ -38,18 +37,18 @@ bool Collision::PathPlayerCollidionDetection(const sf::RectangleShape& sprite1, 
 
         // Resolve collision based on the side
         if (fromTop) {
-            sprite3.setPosition(sprite3.getPosition().x, bounds2.top  - bounds1.height / 2);
+            sprite3.setPosition(sprite3.getPosition().x, bounds2.top - GameMagicNumbers::errorManagement - bounds1.height / 2);
             gameObject.player->IsJumping() = false;
         }
         else if (fromBottom) {
-            sprite3.setPosition(sprite3.getPosition().x, bounds2.top + bounds2.height + bounds1.height / 2);
+            sprite3.setPosition(sprite3.getPosition().x, bounds2.top + GameMagicNumbers::errorManagement + bounds2.height + bounds1.height / 2);
             gameObject.player->IsGravityBoost() = false;
         }
         else if (fromLeft) {
             sprite3.setPosition(bounds2.left - bounds1.width / 2 - GameMagicNumbers::errorManagement, sprite3.getPosition().y);
         }
         else if (fromRight) {
-            sprite3.setPosition(bounds2.left + bounds2.width + bounds1.width / 2 + GameMagicNumbers::errorManagement, sprite3.getPosition().y);
+            sprite3.setPosition(bounds2.left + bounds2.width + bounds1.width / 2, sprite3.getPosition().y);
         }
         return true;
     }

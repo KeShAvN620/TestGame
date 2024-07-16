@@ -12,11 +12,12 @@ private:
 	sf::Vector2f pathPosition;
 private:
 	bool isCollidingWithPlayer;
+	int I;
 	sf::Font font;
 	sf::Text backgoundcollisionText;
 	std::string collosionText;
 public:
-	BackGround(const float pathWidthPositionScale, const float pathHeightPositionScale);
+	BackGround(const float pathWidthPositionScale, const float pathHeightPositionScale , const int i);
 public:
 	sf::RectangleShape& GetPathSprite() { return backGroundPath; }
 	bool& IsCollisionWithPath() { return isCollidingWithPlayer; }
@@ -24,6 +25,6 @@ public:
 	void Load();
 	void Update();
 	void CollisonDetection();
-	void Draw(std::shared_ptr<sf::RenderWindow> window);
+	void Draw(std::shared_ptr<sf::RenderWindow>& window);
 };
 

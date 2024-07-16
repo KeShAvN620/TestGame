@@ -15,8 +15,7 @@ void Runner::SfmlEvent(){
 }
 
 void Runner::Load(){
-	gameObject.backGroundPath->Load();
-	gameObject.backGroundPath1->Load();
+	gameObject.map1->Load();
 	gameObject.player->Load();
 	Update();
 }
@@ -25,8 +24,7 @@ void Runner::Update(){
 	while (window->isOpen()) {
 	SfmlEvent();
 	Deltatime();
-	gameObject.backGroundPath->Update();
-	gameObject.backGroundPath1->Update();
+	gameObject.map1->Update();
 	gameObject.player->Update(deltaTime);
 	Draw();
 	}
@@ -35,8 +33,7 @@ void Runner::Update(){
 void Runner::Draw(){
 	window->clear();
 	gameObject.player->Draw(window);
-	gameObject.backGroundPath->Draw(window);
-	gameObject.backGroundPath1->Draw(window);
+	gameObject.map1->Draw(window);
 
 	window->display();
 }

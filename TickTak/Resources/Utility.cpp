@@ -11,6 +11,7 @@ void Utiluty::UpdateAnimation(sf::Sprite& animationSprite, unsigned int& animati
 	}
 }
 
+
 Utiluty::Utiluty(){
 	if (!font.loadFromFile("Assets/Fonts/arial.ttf")) {
 		std::cerr << "Error loading font\n";

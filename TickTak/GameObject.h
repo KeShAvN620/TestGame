@@ -9,6 +9,7 @@
 #include"Physic/Collision.h"
 #include <SFML/Graphics.hpp>
 #include"Physic/Physic.h"
+#include "Map/Map1.h"
 
 struct GameObject
 {
@@ -16,7 +17,7 @@ struct GameObject
 	Collision collision;
 	Physic physic;
 	std::shared_ptr<Player> player = std::make_shared<Player>();
-	std::shared_ptr<BackGround> backGroundPath = std::make_shared<BackGround>(GameMagicNumbers::pathWidthPositionScale , GameMagicNumbers::pathHeightPositionScale);
-	std::shared_ptr<BackGround> backGroundPath1 = std::make_shared<BackGround>( 0.8973f,1/3.0f);
-}; 
+	std::shared_ptr<Map1> map1 = std::make_shared<Map1>();
+	}; 
 extern GameObject gameObject;
+    
