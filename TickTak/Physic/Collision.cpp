@@ -38,11 +38,12 @@ bool Collision::PathPlayerCollidionDetection(const sf::RectangleShape& sprite1, 
 
         // Resolve collision based on the side
         if (fromTop) {
-            sprite3.setPosition(sprite3.getPosition().x, bounds2.top - GameMagicNumbers::errorManagement - bounds1.height / 2);
+            sprite3.setPosition(sprite3.getPosition().x, bounds2.top  - bounds1.height / 2);
             gameObject.player->IsJumping() = false;
         }
         else if (fromBottom) {
             sprite3.setPosition(sprite3.getPosition().x, bounds2.top + bounds2.height + bounds1.height / 2);
+            gameObject.player->IsGravityBoost() = false;
         }
         else if (fromLeft) {
             sprite3.setPosition(bounds2.left - bounds1.width / 2 - GameMagicNumbers::errorManagement, sprite3.getPosition().y);
@@ -52,7 +53,6 @@ bool Collision::PathPlayerCollidionDetection(const sf::RectangleShape& sprite1, 
         }
         return true;
     }
-    CollisionReseter();
     return false;
 }
 

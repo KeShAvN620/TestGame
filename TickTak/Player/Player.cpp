@@ -5,9 +5,9 @@
 Player::Player()
 	: deltaTime(0.0f), speed(150.0f), playerSpeed(0.0f, 0.0f), gravity(0,GameMagicNumbers::gravity), counterGravity(0,GameMagicNumbers::gravityCounter) ,
 	counterLeft(0), counterRight(0),counterIdle(0), isMovingRight(false), isMovingLeft(false), 
-	isJumping(false), isJumpBoost(false), isGravityAffecting(true),
-	animationTime(0), animationSpeed(8.0f * 0.0166667f), jumpTime(0), jumpRate(28.0f * 0.0166667f),
-	jumpAnimationcounter(0) , jumpAnimationRate(18.0f * 0.0166667f) , jumpAnimationTime(0){
+	isJumping(false), isJumpBoost(false),animationTime(0), animationSpeed(8.0f * 0.0166667f), jumpTime(0),
+	jumpRate(28.0f * 0.0166667f),jumpAnimationcounter(0) , jumpAnimationRate(18.0f * 0.0166667f) 
+	, jumpAnimationTime(0){
 
 	if (!texture.loadFromFile("Assets/Adventure/newSpriteplayer.png")) { 
 		std::cout << "failed to load player texture " << std::endl;
@@ -49,8 +49,8 @@ void Player::Update( const float& deltaTime){
 	this->deltaTime = deltaTime;
 	AnimationHandle();
 	InputHandle();
-	GravityAffect();
 	ReInitializer();
+	GravityAffect();
 	std::cout << sprite.getPosition().y << std::endl;
 }
 
@@ -62,11 +62,12 @@ void Player::Draw(std::shared_ptr<sf::RenderWindow> window) {
 void Player::GravityAffect() {
 	this->sprite.setPosition(sprite.getPosition() + this->deltaTime*(this->playerSpeed + gravity));
 	this->playerCollisionBox.setPosition(sprite.getPosition());
+	this->playerSpeed = sf::Vector2f(GameMagicNumbers::zero, GameMagicNumbers::zero);
 }
 void Player::ReInitializer(){
-	this->playerSpeed = sf::Vector2f(GameMagicNumbers::zero, GameMagicNumbers::zero);
-	this->gravity.y = !gameObject.collision.CollisionOnTop() ? GameMagicNumbers::gravity : GameMagicNumbers::zero;
-	this->counterGravity.y = !gameObject.collision.CollisionOnBottom() ? GameMagicNumbers::gravityCounter : GameMagicNumbers::zero;
+	if (sprite.getPosition().y >= GameMagicNumbers::windowMaxHeight) {
+		sprite.setPosition(sf::Vector2f(sprite.getPosition().x , 0));
+	}
 }
 
 
