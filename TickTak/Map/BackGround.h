@@ -17,6 +17,11 @@ private:
 	sf::Text backgoundcollisionText;
 	std::string collosionText;
 public:
+	bool skipCollisionCheckLeft;
+	bool skipCollisionCheckRight;
+	bool skipCollisionCheckTop;
+	bool skipCollisionCheckBottom;
+public:
 	BackGround(const float pathWidthPositionScale, const float pathHeightPositionScale , const int i);
 public:
 	sf::RectangleShape& GetPathSprite() { return backGroundPath; }

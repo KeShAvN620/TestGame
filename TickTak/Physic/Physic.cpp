@@ -1,3 +1,4 @@
+//physic.cpp
 #include "Physic.h"
 
 Physic::Physic():gravity(0,GameMagicNumbers::gravity), velocityOfGravity(0,0) , overlapLeft(0), overlapRight(0), overlapTop(0), overlapBottom(0) 

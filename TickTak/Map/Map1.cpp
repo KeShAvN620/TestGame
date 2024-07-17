@@ -1,11 +1,13 @@
 #include "Map1.h"
 #include "../Resources/Utility.h"
-#include"../GameObject.h"
+#include "../GameObject.h"
+
 
 Map1::Map1() {
     for (unsigned int i = 0; i < GameMagicNumbers::vectorSize; i++) {
-        level1.push_back(std::make_shared<BackGround>(i* GetProperScaleX(64.0f), GetProperScaleY(400), -1 * i));
+        level1.push_back(std::make_shared<BackGround>((i+1) * GetProperScaleX(64.0f), GetProperScaleY(400), -1 * i));
     }
+    gameObject.collision.PreliminarySearch(level1);
 }
 
 void Map1::Load() {

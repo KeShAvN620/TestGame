@@ -6,7 +6,8 @@ BackGround::BackGround(const float pathWidthPositionScale , const float pathHeig
     isCollidingWithPlayer(false), pathSize(GameMagicNumbers::pathSize,GameMagicNumbers::pathSize),
     pathPosition(GameMagicNumbers::windowMaxWidth * pathWidthPositionScale,
         GameMagicNumbers::windowMaxHeight * pathHeightPositionScale), font(gameObject.utility.GetFont()),
-    collosionText("false") , I(i){
+    collosionText("false") , I(i) , skipCollisionCheckLeft(false), skipCollisionCheckRight(false), skipCollisionCheckTop(false),
+    skipCollisionCheckBottom(false) {
     this->backgoundcollisionText.setFont(font);
     this->backGroundPath.setSize(pathSize);
     this->backGroundPath.setPosition(pathPosition);
@@ -25,9 +26,9 @@ void BackGround::Update(){
 
 void BackGround::CollisonDetection(){
     sf::Vector2f playerCoordinate = gameObject.player->GetPlayerSprite().getPosition();
-    this->isCollidingWithPlayer = gameObject.collision.PathPlayerCollidionDetection(gameObject.player->GetPlayerCollisionBox(), backGroundPath, gameObject.player->GetPlayerSprite());
+    this->isCollidingWithPlayer = gameObject.collision.PathPlayerCollidionDetection(gameObject.player->GetPlayerCollisionBox(), backGroundPath, gameObject.player->GetPlayerSprite(), skipCollisionCheckLeft, skipCollisionCheckRight, skipCollisionCheckTop, skipCollisionCheckBottom);
     this->collosionText = this->isCollidingWithPlayer == true ? " True" : "False";
-    this->backgoundcollisionText.setString("Collision = " + this->collosionText + "  " +"; Player Coordinate = " + std::to_string(int(gameObject.player->GetPlayerSprite().getPosition().x)) + " " + std::to_string(int(gameObject.player->GetPlayerSprite().getPosition().y)));
+   // this->backgoundcollisionText.setString("Collision = " + this->collosionText + "  " +"; Player Coordinate = " + std::to_string(int(gameObject.player->GetPlayerSprite().getPosition().x)) + " " + std::to_string(int(gameObject.player->GetPlayerSprite().getPosition().y)));
 }
 
 void BackGround::Draw(std::shared_ptr<sf::RenderWindow>& window) {

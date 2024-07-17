@@ -1,3 +1,4 @@
+//utility.cpp
 #include"Utility.h"
 
 void Utiluty::UpdateAnimation(sf::Sprite& animationSprite, unsigned int& animationCounter, std::vector<sf::IntRect>& animationFrame) {

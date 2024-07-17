@@ -51,7 +51,7 @@ void Player::Update( const float& deltaTime){
 	InputHandle();
 	ReInitializer();
 	GravityAffect();
-	std::cout << sprite.getPosition().y << std::endl;
+	//std::cout << sprite.getPosition().y << std::endl;
 }
 
 void Player::Draw(std::shared_ptr<sf::RenderWindow> window) {
@@ -96,13 +96,13 @@ void Player::InputMovement()
 		this->isMovingRight = false;
 		this->isMovingLeft = false;
 	}
-	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-	//	this->playerSpeed.y = -this->speed;   // needed for debugging
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+		this->playerSpeed.y = -this->speed;   // needed for debugging
 
-	//}
-	//else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-	//	this->playerSpeed.y = this->speed;
-	//}
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+		this->playerSpeed.y = this->speed;
+	}
 }
 void Player::AnimationMovement() {
 	if (!isJumping) {

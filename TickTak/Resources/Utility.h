@@ -1,3 +1,4 @@
+//utility.h
 #pragma once
 #include<iostream>
 #include <SFML/Graphics.hpp>
@@ -30,7 +31,7 @@ struct GameMagicNumbers {
     static constexpr float collisionBoxSizeY = playerScale * spriteSize - one;
     // for path or background path
     // formula to find the required scale   reqScale = maxDimension/(maxDimension - requiredDimension)
-    static constexpr float pathSize = 2*spriteSize - one;
+    static constexpr float pathSize = 2*spriteSize;
     // for map 
     static constexpr unsigned int vectorSize = 6;
 };
