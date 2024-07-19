@@ -60,7 +60,9 @@ void Player::Draw(std::shared_ptr<sf::RenderWindow> window) {
 }
 
 void Player::GravityAffect() {
-	this->sprite.setPosition(sprite.getPosition() + this->deltaTime*(this->playerSpeed + gravity));
+	std::cout << "garvity affect = " << this->isGravityAffecting << std::endl;
+	this->sprite.setPosition(sprite.getPosition() + this->deltaTime*(this->playerSpeed +
+			(this->isGravityAffecting ? this->gravity: sf::Vector2f(GameMagicNumbers::zero,GameMagicNumbers::zero)) ));
 	this->playerCollisionBox.setPosition(sprite.getPosition());
 	this->playerSpeed = sf::Vector2f(GameMagicNumbers::zero, GameMagicNumbers::zero);
 }
