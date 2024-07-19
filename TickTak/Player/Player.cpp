@@ -4,9 +4,9 @@
 
 Player::Player()
 	: deltaTime(0.0f), speed(150.0f), playerSpeed(0.0f, 0.0f), gravity(0,GameMagicNumbers::gravity), counterGravity(0,GameMagicNumbers::gravityCounter) ,
-	counterLeft(0), counterRight(0),counterIdle(0), isMovingRight(false), isMovingLeft(false), 
+	isGravityAffecting(false), counterLeft(0), counterRight(0), counterIdle(0), isMovingRight(false), isMovingLeft(false),
 	isJumping(false), isJumpBoost(false),animationTime(0), animationSpeed(8.0f * 0.0166667f), jumpTime(0),
-	jumpRate(28.0f * 0.0166667f),jumpAnimationcounter(0) , jumpAnimationRate(18.0f * 0.0166667f) 
+	jumpRate(18.0f * 0.0166667f),jumpAnimationcounter(0) , jumpAnimationRate(18.0f * 0.0166667f) 
 	, jumpAnimationTime(0){
 
 	if (!texture.loadFromFile("Assets/Adventure/newSpriteplayer.png")) { 
@@ -51,7 +51,7 @@ void Player::Update( const float& deltaTime){
 	InputHandle();
 	ReInitializer();
 	GravityAffect();
-	//std::cout << sprite.getPosition().y << std::endl;
+	//std::cout << isGravityAffecting << std::endl;
 }
 
 void Player::Draw(std::shared_ptr<sf::RenderWindow> window) {
@@ -147,6 +147,9 @@ void Player::JumpAnimation() {
 			jumpAnimationcounter = (jumpAnimationcounter + 1) % (jumpAnimation.size() / 2);
 			sprite.setTextureRect(jumpAnimation[isJumpBoost ? jumpAnimationcounter : 3 + jumpAnimationcounter]);
 		}
+	}
+	if (this->isGravityAffecting && !this->isJumping) {
+		sprite.setTextureRect(jumpAnimation[5]);
 	}
 }
 

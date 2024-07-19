@@ -27,6 +27,7 @@ private:
 	bool isMovingLeft;
 	bool isJumping;
 	bool isJumpBoost;
+	bool isGravityAffecting;
 private:
 	unsigned int counterLeft;
 	unsigned int counterRight;
@@ -45,6 +46,7 @@ public:
 	inline sf::RectangleShape& GetPlayerCollisionBox() { return playerCollisionBox;}
 	inline bool& IsJumping() { return isJumping; }
 	inline bool& IsGravityBoost() { return isJumpBoost; }
+	inline bool& IsGravityAffecting() { return isGravityAffecting; }
 public:
 	void Load();
 	void Update( const float& deltatime);

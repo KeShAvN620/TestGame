@@ -15,7 +15,7 @@ struct GameMagicNumbers {
     static constexpr unsigned int maxFrameRate = 60;
 
     // for player
-    static constexpr float gravity = 160.0f;
+    static constexpr float gravity = 200.0f;
     static constexpr float gravityCounter = 3 * gravity;
     static constexpr unsigned int idleFrame = 4;
     static constexpr unsigned int runFrame = 6;
@@ -33,7 +33,9 @@ struct GameMagicNumbers {
     // formula to find the required scale   reqScale = maxDimension/(maxDimension - requiredDimension)
     static constexpr float pathSize = 2*spriteSize;
     // for map 
-    static constexpr unsigned int vectorSize = 6;
+    static constexpr unsigned int vectorSize = 10;
+    static constexpr float minimumDistance = 128;
+
 };
 
 

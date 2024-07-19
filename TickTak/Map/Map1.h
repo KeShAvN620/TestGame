@@ -10,7 +10,6 @@ private:
 
 public:
 	Map1();
-
 public:
 	void Load();
 	void Update();
