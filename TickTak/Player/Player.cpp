@@ -4,15 +4,10 @@
 
 Player::Player()
 	: deltaTime(0.0f), speed(150.0f), playerSpeed(0.0f, 0.0f), gravity(0,GameMagicNumbers::gravity),
-	counterGravity(0,GameMagicNumbers::gravityCounter) ,isGravityAffecting(false), counterLeft(0), 
-	counterRight(0), counterIdle(0), isMovingRight(false), isMovingLeft(false),
-	isJumping(false), isJumpBoost(false),animationTime(0), animationSpeed(8.0f * 0.0166667f),
-	jumpTime(0),jumpRate(18.0f * 0.0166667f),jumpAnimationcounter(0) , 
-	jumpAnimationRate(18.0f * 0.0166667f), jumpAnimationTime(0){
-
+	counterGravity(0,GameMagicNumbers::gravityCounter) {  
 	if (!texture.loadFromFile("Assets/Adventure/newSpriteplayer.png")) { 
 		std::cout << "failed to load player texture " << std::endl;
-	}
+	}   
 
 	for (unsigned int i = 0; i < GameMagicNumbers::idleFrame; i++) {
 		this->idleAnimation.push_back(sf::IntRect(i * GameMagicNumbers::spriteSize,
@@ -25,27 +20,20 @@ Player::Player()
 	for (unsigned int i = 0; i < GameMagicNumbers::runFrame; i++) {
 		this->jumpAnimation.push_back(sf::IntRect(i * GameMagicNumbers::spriteSize,
 			2 * GameMagicNumbers::spriteSize, GameMagicNumbers::spriteSize, GameMagicNumbers::spriteSize));
-	}
 
+		playerPositionText.setFont(gameObject.utility.GetFont());
+	}
+	this->playerPositionText.setFont(gameObject.utility.GetFont());
 	this->sprite.setTexture(texture);
 	this->sprite.setTextureRect(this->idleAnimation[GameMagicNumbers::zero]);
-
-	this->playerCollisionBox.setOutlineThickness(GameMagicNumbers::collisionBoxThickness);
-	this->playerCollisionBox.setOutlineColor(sf::Color::Red);
-	this->playerCollisionBox.setFillColor(sf::Color::Transparent);
-	this->playerCollisionBox.setSize(sf::Vector2f(GameMagicNumbers::collisionBoxSizeX,GameMagicNumbers::collisionBoxSizeY));
-
-	this->sprite.setOrigin(this->sprite.getGlobalBounds().width / 2, this->sprite.getGlobalBounds().height / 2);
-	this->playerCollisionBox.setOrigin(this->playerCollisionBox.getGlobalBounds().width / 2, this->playerCollisionBox.getGlobalBounds().height/ 2);
 }
 
 
 
 void Player::Load() {
-	this->sprite.setPosition(sf::Vector2f(200.f, 200.f)); // Random starting point, todo: change it to GameMagicNumbers
-	this->sprite.setScale(sf::Vector2f(GameMagicNumbers::playerScale, GameMagicNumbers::playerScale));
-	this->playerCollisionBox.setPosition(sprite.getPosition());
-
+	ImportantLoad();
+	CollisionLoad();
+	PositionTxtLoader();
 }
 
 
@@ -54,22 +42,57 @@ void Player::Update( const float& deltaTime){
 	AnimationHandle();
 	InputHandle();
 	ReInitializer();
-	GravityAffect();
+	GravityAffect();   
+	PositionTxtUpdate();
 }
 
 void Player::Draw(std::shared_ptr<sf::RenderWindow> window) {
 	window->draw(this->sprite);
 	window->draw(this->playerCollisionBox);
+	window->draw(this->playerPositionText);
+}
+ 
+
+//---------------------------------------load part-------------------------------------
+
+
+void Player::ImportantLoad(){// important need to be in this same order
+	this->playerCollisionBox.setSize(sf::Vector2f(GameMagicNumbers::collisionBoxSizeX, GameMagicNumbers::collisionBoxSizeY));
+	this->sprite.setOrigin(this->sprite.getGlobalBounds().width / 2, this->sprite.getGlobalBounds().height / 2);
+	this->playerCollisionBox.setOrigin(this->playerCollisionBox.getGlobalBounds().width / 2, this->playerCollisionBox.getGlobalBounds().height / 2);
+	this->sprite.setScale(sf::Vector2f(GameMagicNumbers::playerScale, GameMagicNumbers::playerScale));
+	this->sprite.setPosition(sf::Vector2f(200.f, 200.f)); // Random starting point, todo: change it to GameMagicNumbers
 }
 
+void Player::PositionTxtLoader(){
+	this->playerPositionText.setCharacterSize(10);
+	this->playerPositionText.setPosition(GameMagicNumbers::zero, GameMagicNumbers::zero);
+}
+
+void Player::PositionTxtUpdate(){
+	this->playerPositionText.setPosition(this->sprite.getPosition().x - GameMagicNumbers::windowMaxWidth / 2, GameMagicNumbers::zero);
+	this->playerPositionText.setString("position " + std::to_string(int(sprite.getPosition().x))
+		+ " " + std::to_string(int(sprite.getPosition().y)));
+}
+
+void Player::CollisionLoad(){
+	this->playerCollisionBox.setPosition(sprite.getPosition());
+	this->playerCollisionBox.setOutlineThickness(GameMagicNumbers::collisionBoxThickness);
+	this->playerCollisionBox.setOutlineColor(sf::Color::Red);
+	this->playerCollisionBox.setFillColor(sf::Color::Transparent);
+}
+
+
+
+//--------------------------------------- update part-------------------------------------
 void Player::GravityAffect() {
 	this->sprite.setPosition(sprite.getPosition() + this->deltaTime*(this->playerSpeed 
-			+(this->isGravityAffecting ? this->gravity : sf::Vector2f(GameMagicNumbers::one, GameMagicNumbers::one))));
+			+(b.isGravityAffecting ? this->gravity : sf::Vector2f(GameMagicNumbers::one, GameMagicNumbers::one))));
 	this->playerCollisionBox.setPosition(sprite.getPosition());
 	this->playerSpeed = sf::Vector2f(GameMagicNumbers::zero, GameMagicNumbers::zero);
 }
 void Player::ReInitializer(){
-	// just to make player fall from top if player fall down to abbys
+	// just to make player start from top if player fall down to abbys
 	if (sprite.getPosition().y >= GameMagicNumbers::windowMaxHeight) {
 		sprite.setPosition(sf::Vector2f(sprite.getPosition().x , 0));
 	}
@@ -89,17 +112,17 @@ void Player::InputMovement()
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 		this->playerSpeed.x = -this->speed;
-		this->isMovingRight = false;
-		this->isMovingLeft = true;
+		b.isMovingRight = false;
+		b.isMovingLeft = true;
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 		this->playerSpeed.x = this->speed;
-		this->isMovingRight = true;
-		this->isMovingLeft = false;
+		b.isMovingRight = true;
+		b.isMovingLeft = false;
 	}
 	else {
-		this->isMovingRight = false;
-		this->isMovingLeft = false;
+		b.isMovingRight = false;
+		b.isMovingLeft = false;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
 		this->playerSpeed.y = -this->speed;   // needed for debugging
@@ -110,47 +133,47 @@ void Player::InputMovement()
 	}
 }
 void Player::AnimationMovement() {
-	if (!isJumping) {
-		this->animationTime += this->deltaTime;
-		if (this->animationTime >= this->animationSpeed) {
-			this->animationTime -= this->animationSpeed;
-			if (this->isMovingLeft || this->isMovingRight || this->isGravityAffecting) {
-				auto& counter = this->isMovingLeft ? this->counterLeft : this->counterRight;
+	if (!b.isJumping) {
+		a.animationTime += this->deltaTime;
+		if (a.animationTime >= a.animationSpeed) {
+			a.animationTime -= a.animationSpeed;
+			if (this->b.isMovingLeft || this->b.isMovingRight || this->b.isGravityAffecting) {
+				auto& counter = this->b.isMovingLeft ? c.counterLeft : c.counterRight;
 				gameObject.utility.UpdateAnimation(this->sprite, counter, this->runAnimation);
 			}
 			else {
-				gameObject.utility.UpdateAnimation(this->sprite, this->counterIdle, this->idleAnimation);
+				gameObject.utility.UpdateAnimation(this->sprite, c.counterIdle, this->idleAnimation);
 			}
 		}
 	}
-	float desiredScale = this->isMovingLeft ? -GameMagicNumbers::playerScale : GameMagicNumbers::playerScale;
+	float desiredScale = this->b.isMovingLeft ? -GameMagicNumbers::playerScale : GameMagicNumbers::playerScale;
 	sprite.setScale(desiredScale, GameMagicNumbers::playerScale);
 }
 
 
 
 void Player::InputJump() {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !this->isJumping) {
-		this->isJumping = true;
-		this->isJumpBoost = true;
-		this->jumpTime = GameMagicNumbers::zero;
-		jumpAnimationcounter = GameMagicNumbers::zero;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !this->b.isJumping) {
+		this->b.isJumping = true;
+		this->b.isJumpBoost = true;
+		a.jumpTime = GameMagicNumbers::zero;
+		c.jumpAnimationcounter = GameMagicNumbers::zero;
 	}
-	if (isJumpBoost) {
-		this->jumpTime += this->deltaTime;
-		this->playerSpeed.y = (this->jumpTime <= this->jumpRate) ? -counterGravity.y : GameMagicNumbers::zero;
-		this->isJumpBoost = (this->jumpTime <= this->jumpRate);
+	if (b.isJumpBoost) {
+		a.jumpTime += this->deltaTime;
+		this->playerSpeed.y = (a.jumpTime <= a.jumpRate) ? -counterGravity.y : GameMagicNumbers::zero;
+		this->b.isJumpBoost = (a.jumpTime <= a.jumpRate);
 	}
 }
 
 
 void Player::JumpAnimation() {
-	if (this->isJumping) {
-		this->jumpAnimationTime += this->deltaTime;
-		if (this->jumpAnimationTime >= this->jumpAnimationRate) {
-			this->jumpAnimationTime -= this->jumpAnimationRate;
-			jumpAnimationcounter = (jumpAnimationcounter + 1) % (jumpAnimation.size() / 2);
-			sprite.setTextureRect(jumpAnimation[this->isJumpBoost ? this->jumpAnimationcounter : 3 + this->jumpAnimationcounter]);
+	if (this->b.isJumping) {
+		a.jumpAnimationTime += this->deltaTime;
+		if (a.jumpAnimationTime >= a.jumpAnimationRate) {
+			a.jumpAnimationTime -= a.jumpAnimationRate;
+			c.jumpAnimationcounter = (c.jumpAnimationcounter + 1) % (jumpAnimation.size() / 2);
+			sprite.setTextureRect(jumpAnimation[this->b.isJumpBoost ? c.jumpAnimationcounter : 3 + c.jumpAnimationcounter]);
 		}
 	}
 }

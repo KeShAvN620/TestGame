@@ -49,7 +49,7 @@ public:
     public:
     Utiluty();
 public:
-   inline sf::Font GetFont() { return font; }
+   inline sf::Font& GetFont() { return font; }
    void UpdateAnimation(sf::Sprite& animationSprite, unsigned int& animationCounter, std::vector<sf::IntRect>& animationFrame /*,unsigned int frameSize*/);
    bool UpdateAndDrawEnabler(sf::Vector2f& playerPosition , sf::Vector2f& pathPosition);
    bool MinimumDistanceCollisionUpdate(sf::Vector2f& position1 , sf::Vector2f position2);

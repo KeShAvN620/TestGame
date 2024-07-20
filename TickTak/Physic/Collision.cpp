@@ -31,7 +31,7 @@ void Collision::PathPlayerCollidionDetection(const sf::RectangleShape& sprite1, 
         BoundFinder();
         BoolFinder();
         if (fromTop && !boxTop) {
-            sprite3.setPosition(sprite3.getPosition().x, bounds2.top + GameMagicNumbers::oneAndHalf*3  +GameMagicNumbers::oneAndHalf - bounds1.height / 2);
+            sprite3.setPosition(sprite3.getPosition().x, bounds2.top +GameMagicNumbers::oneAndHalf - bounds1.height / 2);
             gameObject.player->IsJumping() = false;
         }
         else if (fromBottom && !boxBottom ) {
@@ -94,10 +94,8 @@ bool Collision::PlayerOnGround(sf::Sprite& sprite, std::vector<std::shared_ptr<B
     bounds1 = sprite.getGlobalBounds();
     for (unsigned int i = 0; i < level.size(); i++) {
         position2 = level[i]->GetPathSprite().getPosition();
-        if (gameObject.utility.MinimumDistanceCollisionUpdate(position1, position2)) {continue;}
-
         bounds2 = level[i]->GetPathSprite().getGlobalBounds();
-        if (bounds1.intersects(bounds2)) {
+        if (bounds1.intersects(bounds2) && !gameObject.utility.MinimumDistanceCollisionUpdate(position1, position2)) {
             BoundFinder();
             if (overlapTop < overlapBottom && overlapTop < overlapLeft && overlapTop < overlapRight) {
                 isGravityAffecting = true;

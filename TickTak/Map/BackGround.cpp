@@ -2,10 +2,10 @@
 #include "BackGround.h"
 #include"../GameObject.h"
 
-BackGround::BackGround(const float wPositionScale, const float hPositionScale, unsigned int colorcode) :
+BackGround::BackGround(const float wPositionScale, const float hPositionScale, unsigned int colorCode) :
     pathSize(GameMagicNumbers::pathSize, GameMagicNumbers::pathSize),
     pathPosition(GameMagicNumbers::windowMaxWidth* wPositionScale, GameMagicNumbers::windowMaxHeight* hPositionScale),
-    pathColor(gameObject.utility.colors[colorcode]), playerPosition(0, 0), skipCollisionCheckLeft(false), skipCollisionCheckRight(false),
+    pathColor(gameObject.utility.colors[colorCode]), playerPosition(0, 0), skipCollisionCheckLeft(false), skipCollisionCheckRight(false),
     skipCollisionCheckTop(false), skipCollisionCheckBottom(false) {}
 
 
