@@ -10,22 +10,19 @@ private:
 	sf::RectangleShape backGroundPath;
 	sf::Vector2f pathSize;
 	sf::Vector2f pathPosition;
-private:
-	bool isCollidingWithPlayer;
-	int I;
-	sf::Font font;
-	sf::Text backgoundcollisionText;
-	std::string collosionText;
+	sf::Vector2f playerPosition;
+
 public:
+	sf::Color pathColor;
 	bool skipCollisionCheckLeft;
 	bool skipCollisionCheckRight;
 	bool skipCollisionCheckTop;
 	bool skipCollisionCheckBottom;
+
 public:
-	BackGround(const float pathWidthPositionScale, const float pathHeightPositionScale , const int i);
+	BackGround(const float wPositionScale, const float hPositionScale ,unsigned int colorcode = 6);
 public:
 	sf::RectangleShape& GetPathSprite() { return backGroundPath; }
-	bool& IsCollisionWithPath() { return isCollidingWithPlayer; }
 public:
 	void Load();
 	void Update();

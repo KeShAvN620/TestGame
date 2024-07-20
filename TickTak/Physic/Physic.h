@@ -3,12 +3,10 @@
 #include <SFML/Graphics.hpp>
 #include"../Resources/Utility.h"
 #include"Collision.h"
+#include<vector>
+#include<memory>
 class Physic
 {
-private:
-	sf::Vector2f gravity;
-	sf::Vector2f velocityOfGravity;
-private:
     sf::FloatRect bounds1;
     sf::FloatRect bounds2;
 private:
@@ -21,6 +19,6 @@ private:
 public:
 	Physic();
 public:
-	bool AffectGravity(const sf::RectangleShape collisionBox, const sf::RectangleShape& path);
+    //void PreliminarySearch(std::vector<std::shared_ptr<BackGround>>* level);
 };
 

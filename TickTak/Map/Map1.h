@@ -3,10 +3,14 @@
 #include<vector>
 #include<memory>
 #include"BackGround.h"
+
 class Map1
 {
 private:
 	std::vector<std::shared_ptr<BackGround>> level1;
+	sf::Vector2f playerPosition;
+	sf::Vector2f pathPosition;
+
 
 public:
 	Map1();

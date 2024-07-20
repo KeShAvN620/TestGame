@@ -3,24 +3,28 @@
 #include"../GameObject.h"
 
 Player::Player()
-	: deltaTime(0.0f), speed(150.0f), playerSpeed(0.0f, 0.0f), gravity(0,GameMagicNumbers::gravity), counterGravity(0,GameMagicNumbers::gravityCounter) ,
-	isGravityAffecting(false), counterLeft(0), counterRight(0), counterIdle(0), isMovingRight(false), isMovingLeft(false),
-	isJumping(false), isJumpBoost(false),animationTime(0), animationSpeed(8.0f * 0.0166667f), jumpTime(0),
-	jumpRate(18.0f * 0.0166667f),jumpAnimationcounter(0) , jumpAnimationRate(18.0f * 0.0166667f) 
-	, jumpAnimationTime(0){
+	: deltaTime(0.0f), speed(150.0f), playerSpeed(0.0f, 0.0f), gravity(0,GameMagicNumbers::gravity),
+	counterGravity(0,GameMagicNumbers::gravityCounter) ,isGravityAffecting(false), counterLeft(0), 
+	counterRight(0), counterIdle(0), isMovingRight(false), isMovingLeft(false),
+	isJumping(false), isJumpBoost(false),animationTime(0), animationSpeed(8.0f * 0.0166667f),
+	jumpTime(0),jumpRate(18.0f * 0.0166667f),jumpAnimationcounter(0) , 
+	jumpAnimationRate(18.0f * 0.0166667f), jumpAnimationTime(0){
 
 	if (!texture.loadFromFile("Assets/Adventure/newSpriteplayer.png")) { 
 		std::cout << "failed to load player texture " << std::endl;
 	}
 
 	for (unsigned int i = 0; i < GameMagicNumbers::idleFrame; i++) {
-		this->idleAnimation.push_back(sf::IntRect(i * GameMagicNumbers::spriteSize, GameMagicNumbers::zero, GameMagicNumbers::spriteSize, GameMagicNumbers::spriteSize));
+		this->idleAnimation.push_back(sf::IntRect(i * GameMagicNumbers::spriteSize,
+			GameMagicNumbers::zero, GameMagicNumbers::spriteSize, GameMagicNumbers::spriteSize));
 	}
 	for (unsigned int i = 0; i < GameMagicNumbers::runFrame; i++) {
-		this->rightAnimation.push_back(sf::IntRect(i * GameMagicNumbers::spriteSize, GameMagicNumbers::spriteSize, GameMagicNumbers::spriteSize, GameMagicNumbers::spriteSize));
+		this->runAnimation.push_back(sf::IntRect(i * GameMagicNumbers::spriteSize,
+			GameMagicNumbers::spriteSize, GameMagicNumbers::spriteSize, GameMagicNumbers::spriteSize));
 	}
 	for (unsigned int i = 0; i < GameMagicNumbers::runFrame; i++) {
-		this->jumpAnimation.push_back(sf::IntRect(i * GameMagicNumbers::spriteSize, 2 * GameMagicNumbers::spriteSize, GameMagicNumbers::spriteSize, GameMagicNumbers::spriteSize));
+		this->jumpAnimation.push_back(sf::IntRect(i * GameMagicNumbers::spriteSize,
+			2 * GameMagicNumbers::spriteSize, GameMagicNumbers::spriteSize, GameMagicNumbers::spriteSize));
 	}
 
 	this->sprite.setTexture(texture);
@@ -51,7 +55,6 @@ void Player::Update( const float& deltaTime){
 	InputHandle();
 	ReInitializer();
 	GravityAffect();
-	//std::cout << isGravityAffecting << std::endl;
 }
 
 void Player::Draw(std::shared_ptr<sf::RenderWindow> window) {
@@ -60,13 +63,13 @@ void Player::Draw(std::shared_ptr<sf::RenderWindow> window) {
 }
 
 void Player::GravityAffect() {
-	std::cout << "garvity affect = " << this->isGravityAffecting << std::endl;
-	this->sprite.setPosition(sprite.getPosition() + this->deltaTime*(this->playerSpeed +
-			(this->isGravityAffecting ? this->gravity: sf::Vector2f(GameMagicNumbers::zero,GameMagicNumbers::zero)) ));
+	this->sprite.setPosition(sprite.getPosition() + this->deltaTime*(this->playerSpeed 
+			+(this->isGravityAffecting ? this->gravity : sf::Vector2f(GameMagicNumbers::one, GameMagicNumbers::one))));
 	this->playerCollisionBox.setPosition(sprite.getPosition());
 	this->playerSpeed = sf::Vector2f(GameMagicNumbers::zero, GameMagicNumbers::zero);
 }
 void Player::ReInitializer(){
+	// just to make player fall from top if player fall down to abbys
 	if (sprite.getPosition().y >= GameMagicNumbers::windowMaxHeight) {
 		sprite.setPosition(sf::Vector2f(sprite.getPosition().x , 0));
 	}
@@ -111,12 +114,12 @@ void Player::AnimationMovement() {
 		this->animationTime += this->deltaTime;
 		if (this->animationTime >= this->animationSpeed) {
 			this->animationTime -= this->animationSpeed;
-			if (this->isMovingLeft || this->isMovingRight) {
+			if (this->isMovingLeft || this->isMovingRight || this->isGravityAffecting) {
 				auto& counter = this->isMovingLeft ? this->counterLeft : this->counterRight;
-				gameObject.utility.UpdateAnimation(sprite, counter, rightAnimation);
+				gameObject.utility.UpdateAnimation(this->sprite, counter, this->runAnimation);
 			}
 			else {
-				gameObject.utility.UpdateAnimation(sprite, counterIdle, idleAnimation);
+				gameObject.utility.UpdateAnimation(this->sprite, this->counterIdle, this->idleAnimation);
 			}
 		}
 	}
@@ -147,11 +150,8 @@ void Player::JumpAnimation() {
 		if (this->jumpAnimationTime >= this->jumpAnimationRate) {
 			this->jumpAnimationTime -= this->jumpAnimationRate;
 			jumpAnimationcounter = (jumpAnimationcounter + 1) % (jumpAnimation.size() / 2);
-			sprite.setTextureRect(jumpAnimation[isJumpBoost ? jumpAnimationcounter : 3 + jumpAnimationcounter]);
+			sprite.setTextureRect(jumpAnimation[this->isJumpBoost ? this->jumpAnimationcounter : 3 + this->jumpAnimationcounter]);
 		}
-	}
-	if (this->isGravityAffecting && !this->isJumping) {
-		sprite.setTextureRect(jumpAnimation[5]);
 	}
 }
 

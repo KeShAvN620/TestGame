@@ -1,22 +1,14 @@
 //physic.cpp
 #include "Physic.h"
 
-Physic::Physic():gravity(0,GameMagicNumbers::gravity), velocityOfGravity(0,0) , overlapLeft(0), overlapRight(0), overlapTop(0), overlapBottom(0) 
+Physic::Physic(): overlapLeft(0), overlapRight(0), overlapTop(0), overlapBottom(0) 
 , fromTop(false){}
 
-bool Physic::AffectGravity(const sf::RectangleShape collisionBox, const sf::RectangleShape& path) {
-    bounds1 = collisionBox.getGlobalBounds();
-    bounds2 = path.getGlobalBounds();
-    if (bounds1.intersects(bounds2)) {
-        overlapLeft = bounds1.left + bounds1.width - bounds2.left;
-        overlapRight = bounds2.left + bounds2.width - bounds1.left;
-        overlapTop = bounds1.top + bounds1.height - bounds2.top;
-        overlapBottom = bounds2.top + bounds2.height - bounds1.top;
-
-        fromTop = (overlapTop < overlapBottom && overlapTop < overlapLeft && overlapTop < overlapRight);
-        if (fromTop) { 
-            return false; 
-        }
-    }
-    return true;
-}
+//void Physic::PreliminarySearch(std::vector<std::shared_ptr<BackGround>>* level){
+//	std::vector<std::shared_ptr<BackGround>>bb = *level;
+//	for (int i = 0; i < level->size(); i++) {
+//		bounds1 = bb[i]->GetPathSprite().getGlobalBounds();
+//		std::cout << bounds1.top << std::endl;
+//	}
+//}
+//

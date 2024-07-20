@@ -11,7 +11,10 @@ class Collision
 private: // use by all
     sf::FloatRect bounds1;
     sf::FloatRect bounds2;
+    sf::Vector2f position1;
+    sf::Vector2f position2;
 private:// by path player
+    float tolerance;
     float overlapLeft;
     float overlapRight;
     float overlapTop;
@@ -27,7 +30,10 @@ public:
     Collision();
     void CollisionReseter();
     void UpdateAnimation(sf::Sprite& animationSprite, unsigned int& animationCounter, std::vector<sf::IntRect>& animationFrame);
-    bool PathPlayerCollidionDetection(const sf::RectangleShape& sprite1, const sf::RectangleShape& sprite2, sf::Sprite& sprite3, bool& boxLeft, bool& boxRight, bool& boxTop, bool& boxBottom);
-    void PreliminarySearch(std::vector<std::shared_ptr<BackGround>>& level1);
+    void PathPlayerCollidionDetection(const sf::RectangleShape& sprite1, const sf::RectangleShape& sprite2, sf::Sprite& sprite3, bool& boxLeft, bool& boxRight, bool& boxTop, bool& boxBottom);
+    void PreliminarySearch(std::vector<std::shared_ptr<BackGround>>& level);
     bool PlayerOnGround(sf::Sprite& sprite, std::vector<std::shared_ptr<BackGround>>& level);
+    void BoundFinder();
+    void BoolFinder();
+    void ExpandBound(sf::FloatRect& bound);
 };
