@@ -17,13 +17,12 @@ private:
 		float dodgeTimer = 0.0f;
 		float dodgeRate = 40.0f * tempdeltatime;
 	};
-
 	struct AnimationTimer {
 	private:
 		float tempdeltatime = 0.0166667f;
 	public:
 		float animationTime = 0;
-		float animationRate = 6.0f * tempdeltatime;
+		float animationRate = 8.0f * tempdeltatime;
 		float jumpAnimationTime = 0;
 	};
 	struct AnimationStartingPoint {
@@ -31,6 +30,7 @@ private:
 		unsigned int frequencyY;
 		unsigned int idle;
 		unsigned int run;
+		unsigned int slide;
 		unsigned int jump;
 		unsigned int jumpFirsthalf;
 		unsigned int jumpSecondhalf;
@@ -39,7 +39,7 @@ private:
 	struct AnimationSize {
 		unsigned int idleSize = 4;
 		unsigned int animationSize;
-		unsigned int jumpAnimationSize = 3;
+		unsigned int jumpAndSlide = 2;
 	};
 	struct Bool {
 		bool isMovingRight = false;
@@ -47,7 +47,7 @@ private:
 		bool isJumping = false;
 		bool isJumpBoost = false;
 		bool isGravityAffecting = false;
-		bool isDodging = false;
+		bool isDodging = false; bool canDodge = true;
 		bool isDodgeBoost = false;
 	};
 	struct Counter {
@@ -56,6 +56,8 @@ private:
 		unsigned int counterIdle = 0;
 		unsigned int counterJumpFirst = 0;
 		unsigned int counterJumpSecond = 0;
+		unsigned int counterSlide = 0;
+
 	};
 private:
 	sf::Texture texture;
@@ -91,6 +93,7 @@ public:
 	inline bool& IsJumping() { return b.isJumping; }
 	inline bool& IsGravityBoost() { return b.isJumpBoost; }
 	inline bool& IsGravityAffecting() { return b.isGravityAffecting; }
+	inline bool& CanDodging() { return b.canDodge;}
 
 public:
 	void Load();
@@ -110,6 +113,7 @@ private: //update stuff
 	void InputShift();
 	void AnimationHandle();
 	void MovementAnimation();
+	void ShiftAnimation();
 	void InputJump();
 	void JumpAnimation();
 

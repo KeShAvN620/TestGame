@@ -28,10 +28,11 @@ Player::Player()
 void Player::StructInit() {
 	aS.animationSize = aSP.frequencyX;
 	aSP.idle = 0 * aSP.frequencyX;
+	aSP.slide = aSP.idle + (aSP.frequencyX*2)/3;
 	aSP.run = 1 * aSP.frequencyX;
 	aSP.jump = 2 * aSP.frequencyX;
 	aSP.jumpFirsthalf = aSP.jump ;
-	aSP.jumpSecondhalf = aSP.jump + aSP.frequencyX / 2;
+	aSP.jumpSecondhalf = aSP.jump + aSP.frequencyX / 3;
 	aSP.attack1 = 3 * aSP.frequencyX;
 }
 
@@ -109,6 +110,7 @@ void Player::InputHandle(){
 void Player::AnimationHandle() {
 	JumpAnimation();
 	MovementAnimation();
+	ShiftAnimation();
 }
 
 void Player::InputMovement()
@@ -152,9 +154,10 @@ void Player::InputJump() {
 	}
 }
 void Player::InputShift() {
-	if (!b.isDodging && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+	if (!b.isDodging && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) && b.canDodge) {
 		b.isDodging = true;
 		b.isDodgeBoost = true;
+		b.canDodge = false;
 		gT.dodgeTimer = 0;
 		gT.dodgeBoostTimer = GameMagicNumbers::zero;
 
@@ -180,7 +183,7 @@ void Player::MovementAnimation() {
 		aT.animationTime += this->deltaTime;
 		if (aT.animationTime >= aT.animationRate) {
 			aT.animationTime -= aT.animationRate;
-			if (b.isMovingLeft || b.isMovingRight || b.isGravityAffecting) {
+			if (b.isMovingLeft || b.isMovingRight || b.isGravityAffecting && !b.isDodgeBoost) {
 				auto& counter = this->b.isMovingLeft ? c.counterLeft : c.counterRight;
 				gameObject.utility.UpdateAnimation(this->sprite, this->playerAnimation, counter , aSP.run , aS.animationSize);
 			}
@@ -189,6 +192,12 @@ void Player::MovementAnimation() {
 	}
 	float desiredScale = b.isMovingLeft ? -GameMagicNumbers::playerScale : GameMagicNumbers::playerScale;
 	sprite.setScale(desiredScale, GameMagicNumbers::playerScale);
+}
+
+void Player::ShiftAnimation(){
+	if (b.isDodgeBoost) {
+		gameObject.utility.UpdateAnimation(sprite, playerAnimation, c.counterSlide, aSP.slide, aS.jumpAndSlide);
+	}
 }
 
 
@@ -202,7 +211,7 @@ void Player::JumpAnimation() {
 		if (aT.jumpAnimationTime >= aT.animationRate) {
 			aT.jumpAnimationTime -= aT.animationRate;
 			gameObject.utility.UpdateAnimation(sprite, playerAnimation,(b.isJumpBoost ? c.counterJumpFirst : c.counterJumpSecond),
-				(b.isJumpBoost ? aSP.jumpFirsthalf : aSP.jumpSecondhalf), aS.jumpAnimationSize);
+				(b.isJumpBoost ? aSP.jumpFirsthalf : aSP.jumpSecondhalf), aS.jumpAndSlide);
 		}
 	}
 }

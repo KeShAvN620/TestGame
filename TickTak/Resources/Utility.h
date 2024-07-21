@@ -20,7 +20,7 @@ struct GameMagicNumbers {
     static constexpr unsigned int spriteSize = 32;
     static constexpr float oneAndHalf = 1.5f;
     static constexpr float playerScale = 1.75f;
-    static constexpr float dodgepixel = 5.0f;
+    static constexpr float dodgepixel = 20.0f;
 
     // for collision box
     static constexpr unsigned int zero = 0;

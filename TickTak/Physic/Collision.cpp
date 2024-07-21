@@ -101,6 +101,7 @@ bool Collision::PlayerOnGround(sf::Sprite& sprite, std::vector<std::shared_ptr<B
             BoundFinder();
             if (overlapTop < overlapBottom && overlapTop < overlapLeft && overlapTop < overlapRight) {
                 isGravityAffecting = true;
+                gameObject.player->CanDodging() = true;
                 break;
             }
          

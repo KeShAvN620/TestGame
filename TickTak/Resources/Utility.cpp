@@ -6,7 +6,7 @@ Utiluty::Utiluty() {
 		std::cerr << "Error loading font\n";
 		return;
 	}
-	if (!playerTexture.loadFromFile("Assets/Adventure/newSpriteplayer.png")) {
+	if (!playerTexture.loadFromFile("Assets/Adventure/PlayerSprite.png")) {
 		std::cerr << "Error loading playerSprite\n";
 	}
 	ColorLoader();
