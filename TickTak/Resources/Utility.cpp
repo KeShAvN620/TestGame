@@ -6,6 +6,13 @@ Utiluty::Utiluty() {
 		std::cerr << "Error loading font\n";
 		return;
 	}
+	if (!playerTexture.loadFromFile("Assets/Adventure/newSpriteplayer.png")) {
+		std::cerr << "Error loading playerSprite\n";
+	}
+	ColorLoader();
+}
+
+void Utiluty::ColorLoader(){
 	colors = {
 	  sf::Color::White,
 	  sf::Color::Red,
@@ -21,10 +28,10 @@ Utiluty::Utiluty() {
 	};
 }
 
-void Utiluty::UpdateAnimation(sf::Sprite& animationSprite, unsigned int& animationCounter, std::vector<sf::IntRect>& animationFrame) {
-	if (!animationFrame.empty()) {
-		animationCounter = (animationCounter + 1) % animationFrame.size();
-		animationSprite.setTextureRect(animationFrame[animationCounter]);
+void Utiluty::UpdateAnimation(sf::Sprite& aSprite, std::vector<sf::IntRect>& aFrame, unsigned int& aCounter, const unsigned int& aStart, const unsigned int& aSize) {
+	if (!aFrame.empty()) {
+		aCounter = (aCounter + 1) % aSize;
+		aSprite.setTextureRect(aFrame[aStart + aCounter]);
 	}
 	else {
 		std::cout << "unable to load frames " << std::endl;
@@ -37,7 +44,7 @@ bool Utiluty::UpdateAndDrawEnabler(sf::Vector2f& playerPosition, sf::Vector2f& p
 		abs(playerPosition.y - pathPosition.y) >= GameMagicNumbers::minimumUpdateDistanceY;
 }
 
-bool Utiluty::MinimumDistanceCollisionUpdate(sf::Vector2f& position1, sf::Vector2f position2){
+bool Utiluty::MinimumDistanceCollisionUpdate(sf::Vector2f& position1, sf::Vector2f& position2){
 	return abs(position1.x - position2.x) >= GameMagicNumbers::minimumDistance &&
 		abs(position1.y - position2.y) >= GameMagicNumbers::minimumDistance;
 }

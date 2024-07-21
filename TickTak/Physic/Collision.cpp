@@ -35,14 +35,14 @@ void Collision::PathPlayerCollidionDetection(const sf::RectangleShape& sprite1, 
             gameObject.player->IsJumping() = false;
         }
         else if (fromBottom && !boxBottom ) {
-            sprite3.setPosition(sprite3.getPosition().x, bounds2.top + GameMagicNumbers::oneAndHalf  + bounds2.height + bounds1.height / 2);
+            sprite3.setPosition(sprite3.getPosition().x, bounds2.top  + bounds2.height + bounds1.height / 2);
             gameObject.player->IsGravityBoost() = false;
         }
         else if (fromLeft && !boxLeft) {
-            sprite3.setPosition(bounds2.left - bounds1.width / 2, sprite3.getPosition().y);
+            sprite3.setPosition(bounds2.left - bounds1.width / 2 -GameMagicNumbers::oneAndHalf, sprite3.getPosition().y);
         }
         else if (fromRight&& !boxRight) {
-            sprite3.setPosition(bounds2.left + bounds2.width + bounds1.width / 2 + GameMagicNumbers::oneAndHalf, sprite3.getPosition().y);
+            sprite3.setPosition(bounds2.left + bounds2.width + bounds1.width/2 + GameMagicNumbers::oneAndHalf, sprite3.getPosition().y);
         }
     }
     CollisionReseter();
@@ -51,13 +51,15 @@ void Collision::PathPlayerCollidionDetection(const sf::RectangleShape& sprite1, 
 
 void Collision::PreliminarySearch(std::vector<std::shared_ptr<BackGround>>& level1) {
     for (unsigned int i = 0; i < level1.size(); i++) {
-        bounds1 = level1[i]->GetPathSprite().getGlobalBounds(); ExpandBound(bounds1);
+        bounds1 = level1[i]->GetPathSprite().getGlobalBounds(); 
         position1 = level1[i]->GetPathSprite().getPosition();  //std::cout << "Bounds3 (Object " << i << "): " << bounds1.left << ", " << bounds1.top << ", "<< bounds1.width << ", "<< bounds1.height << std::endl;
         for (unsigned int j = 0; j < level1.size(); j++) {
-            if (i == j) continue;
-            bounds2 = level1[j]->GetPathSprite().getGlobalBounds(); ExpandBound(bounds2);//std::cout << "Bounds3 (Object " << i << "): " << bounds2.left << ", " << bounds2.top << ", "<< bounds2.width << ", "<< bounds2.height << std::endl;
             position2 = level1[j]->GetPathSprite().getPosition();
-            if (bounds1.intersects(bounds2) && (abs(position1.x - position2.x) <= tolerance || abs(position1.y - position2.y) <= tolerance) ) {
+            if (i == j || !(abs(position1.x - position2.x) <= tolerance || abs(position1.y - position2.y) <= tolerance)) continue;
+            bounds2 = level1[j]->GetPathSprite().getGlobalBounds();//std::cout << "Bounds3 (Object " << i << "): " << bounds2.left << ", " << bounds2.top << ", "<< bounds2.width << ", "<< bounds2.height << std::endl;
+            ExpandBound(bounds1);
+            ExpandBound(bounds2);
+            if (bounds1.intersects(bounds2)) {
                 //std::cout << "Intersection detected between object " << i << " and object " << j << std::endl;
                 //std::cout << position1.x << " " << position1.y << " " << position2.x << " " << position2.y << std::endl;
                 BoundFinder();
