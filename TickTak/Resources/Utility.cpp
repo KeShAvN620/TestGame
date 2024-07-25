@@ -9,6 +9,7 @@ Utiluty::Utiluty() {
 	if (!playerTexture.loadFromFile("Assets/Adventure/PlayerSprite.png")) {
 		std::cerr << "Error loading playerSprite\n";
 	}
+	LoadBullet();
 	ColorLoader();
 }
 
@@ -26,6 +27,12 @@ void Utiluty::ColorLoader(){
 	  sf::Color::Transparent,
 	  sf::Color(0, 0, 0, 0) //transparent black
 	};
+}
+
+void Utiluty::LoadBullet(){
+	if (!bulletTexture.loadFromFile("Assets/Bullets/Bullets.png")) {
+		std::cerr << "Error loading BulletSprite\n";
+	}
 }
 
 void Utiluty::UpdateAnimation(sf::Sprite& aSprite, std::vector<sf::IntRect>& aFrame, unsigned int& aCounter, const unsigned int& aStart, const unsigned int& aSize) {
@@ -47,6 +54,17 @@ bool Utiluty::UpdateAndDrawEnabler(sf::Vector2f& playerPosition, sf::Vector2f& p
 bool Utiluty::MinimumDistanceCollisionUpdate(sf::Vector2f& position1, sf::Vector2f& position2){
 	return abs(position1.x - position2.x) >= GameMagicNumbers::minimumDistance &&
 		abs(position1.y - position2.y) >= GameMagicNumbers::minimumDistance;
+}
+
+sf::Vector2f Utiluty::NormalizedVectors(sf::Vector2f& vector){
+	float length = sqrt(vector.x * vector.x + vector.y * vector.y);
+	if (length == 0) {
+		return vector;
+	}
+	else {
+	vector = vector / length;
+	return vector;
+	}
 }
 
 

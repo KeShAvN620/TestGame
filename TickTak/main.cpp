@@ -1,7 +1,6 @@
 //main.cpp
-#include"Runner.h"
+#include"GameObject.h"
 int main() {
-	Runner runProgram;
-	runProgram.Load();
+	gameObject.runProgram.Load();
 	return 0;
 }

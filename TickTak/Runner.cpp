@@ -1,5 +1,6 @@
 //Runner.cpp
 #include "Runner.h"
+#include"GameObject.h"
 
 Runner::Runner():window(std::make_shared<sf::RenderWindow>(sf::VideoMode(static_cast<int>(GameMagicNumbers::windowMaxWidth),
 	static_cast<int>(GameMagicNumbers::windowMaxHeight)), "SFML works!")),

@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Projectile\AuraSlice.cpp" />
     <ClCompile Include="Map\Map1.cpp" />
     <ClCompile Include="Physic\Physic.cpp" />
     <ClCompile Include="Physic\Collision.cpp" />
@@ -156,6 +157,7 @@
     <Text Include="random.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Projectile\AuraSlice.h" />
     <ClInclude Include="Map\Map1.h" />
     <ClInclude Include="Physic\Physic.h" />
     <ClInclude Include="Physic\Collision.h" />

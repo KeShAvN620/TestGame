@@ -4,7 +4,7 @@
 
 
 Map1::Map1():playerPosition(0,0), pathPosition(0,0){
-    for (unsigned int i = GameMagicNumbers::zero; i < GameMagicNumbers::vectorSize; i++) {
+    for (unsigned int i = GameMagicNumbers::zero; i < GameMagicNumbers::MapSize; i++) {
         level1.push_back(std::make_shared<BackGround>((i) * GetProperScaleX(66.0f),GetProperScaleY(400.0), (i % (gameObject.utility.colors.size() - 3))));  /*- (i*(1.0/25))*/
     } 
 }

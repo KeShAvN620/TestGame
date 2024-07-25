@@ -15,6 +15,9 @@ struct GameMagicNumbers {
     static constexpr unsigned int maxFrameRate = 60;
 
     // for player
+   // static constexpr float tempdeltatime = 0.0166667f;
+
+    static constexpr float playerSpeed = 150.0f;
     static constexpr float gravity = 140.0f;
     static constexpr float gravityCounter = 3.0f * gravity;
     static constexpr unsigned int spriteSize = 32;
@@ -35,11 +38,17 @@ struct GameMagicNumbers {
     static constexpr float pathSize = 2*spriteSize;
 
     // for map 
-    static constexpr unsigned int vectorSize = 200;
+    static constexpr unsigned int MapSize = 200;
     static constexpr float minimumDistance = 96.0f;
     static constexpr float minimumUpdateDistanceX = 400.0f;
     static constexpr float minimumUpdateDistanceY = minimumUpdateDistanceX * .75f;
-
+    // for slice
+    static constexpr float sliceSize = 15.0f;
+    static constexpr float sliceCollisionSize = sliceSize -1.0f;
+    static constexpr float projectileScale = 1.6f * playerScale;
+    static constexpr float projectileSpeed = 6.0f * playerSpeed;
+    static constexpr float PI = 3.14159f;
+    static constexpr unsigned int oneEightyDegree = 180;
 };
 
 
@@ -47,6 +56,7 @@ class Utiluty
 {
     sf::Font font;
     sf::Texture playerTexture;
+    sf::Texture bulletTexture;
 public:
     std::vector<sf::Color> colors;
 public:
@@ -54,13 +64,17 @@ public:
 
 private:
     void ColorLoader();
+    void LoadBullet();
 public:
    inline sf::Font& GetFont() { return font; }
    inline sf::Texture& GetPlayerTexture() { return playerTexture;}
-
+   inline sf::Texture& GetBulletTexture() { return bulletTexture;}
 public:
+
    void UpdateAnimation(sf::Sprite& aSprite, std::vector<sf::IntRect>& aFrame, unsigned int& aCounter,const unsigned int& aStart , const unsigned int& aSize );
    bool UpdateAndDrawEnabler(sf::Vector2f& playerPosition , sf::Vector2f& pathPosition);
    bool MinimumDistanceCollisionUpdate(sf::Vector2f& position1 , sf::Vector2f& position2);
+   sf::Vector2f NormalizedVectors(sf::Vector2f& vector);
+   
 };
 

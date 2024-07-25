@@ -3,7 +3,7 @@
 #include"../GameObject.h"
 
 Player::Player()
-	: deltaTime(0.0f), speed(150.0f), playerSpeed(0.0f, 0.0f), gravity(0,GameMagicNumbers::gravity),
+	: deltaTime(0.0f), speed(GameMagicNumbers::playerSpeed), playerSpeed(0.0f, 0.0f), gravity(0,GameMagicNumbers::gravity),
 	counterGravity(0,GameMagicNumbers::gravityCounter) {  
 
 	this->texture = gameObject.utility.GetPlayerTexture();
@@ -18,8 +18,8 @@ Player::Player()
 		}
 	}
 	StructInit();
-	//std::cout << "X size = " << aS.animationSize << std::endl;
-	//for (int i = 0 ; i < textureId.size() ; i++ ){ std::cout << textureId[i] << std::endl; }
+
+
 	this->playerPositionText.setFont(gameObject.utility.GetFont());
 	this->sprite.setTexture(texture);
 	this->sprite.setTextureRect(this->playerAnimation[GameMagicNumbers::zero]);
@@ -46,30 +46,40 @@ void Player::Load() {
 
 
 void Player::Update( const float& deltaTime){
+	ProjectileLoad();
 	this->deltaTime = deltaTime;
 	AnimationHandle();
 	InputHandle();
-	GravityAffect();   // just reset player position to top if player falls down of path
-	if (sprite.getPosition().y >= GameMagicNumbers::windowMaxHeight) { sprite.setPosition(sf::Vector2f(sprite.getPosition().x, 0)); }
-	PositionTxtUpdate();
+	GravityAffect();   
+	// just reset player position to top if player falls down of path
+	if (sprite.getPosition().y >= GameMagicNumbers::windowMaxHeight)
+	{ sprite.setPosition(sf::Vector2f(sprite.getPosition().x, 0)); }
+	PositionTxtUpdate(); 
+	// for projectile
+	ProjectielUpdate();
 
 }
 
-void Player::Draw(std::shared_ptr<sf::RenderWindow> window) {
+void Player::Draw(std::shared_ptr<sf::RenderWindow>& window) {
 	window->draw(this->sprite);
 	window->draw(this->playerCollisionBox);
 	window->draw(this->playerPositionText);
+	ProjectileDraw();
 }
- 
+
+
 
 //---------------------------------------load part-------------------------------------
 
 
 void Player::ImportantLoad(){// important need to be in this same order
-	this->playerCollisionBox.setSize(sf::Vector2f(GameMagicNumbers::collisionBoxSizeX, GameMagicNumbers::collisionBoxSizeY));
+	//player
 	this->sprite.setOrigin(this->sprite.getGlobalBounds().width / 2, this->sprite.getGlobalBounds().height / 2);
-	this->playerCollisionBox.setOrigin(this->playerCollisionBox.getGlobalBounds().width / 2, this->playerCollisionBox.getGlobalBounds().height / 2);
 	this->sprite.setScale(sf::Vector2f(GameMagicNumbers::playerScale, GameMagicNumbers::playerScale));
+	//collisionbox
+	this->playerCollisionBox.setSize(sf::Vector2f(GameMagicNumbers::collisionBoxSizeX, GameMagicNumbers::collisionBoxSizeY));
+	this->playerCollisionBox.setOrigin(this->playerCollisionBox.getGlobalBounds().width / 2, this->playerCollisionBox.getGlobalBounds().height / 2);
+
 	this->sprite.setPosition(sf::Vector2f(200.f, 200.f)); // Random starting point, todo: change it to GameMagicNumbers
 }
 
@@ -83,7 +93,6 @@ void Player::PositionTxtUpdate(){
 	this->playerPositionText.setString("position " + std::to_string(int(sprite.getPosition().x))
 		+ " " + std::to_string(int(sprite.getPosition().y)));
 }
-
 void Player::CollisionLoad(){
 	this->playerCollisionBox.setPosition(sprite.getPosition());
 	this->playerCollisionBox.setOutlineThickness(GameMagicNumbers::collisionBoxThickness);
@@ -154,11 +163,12 @@ void Player::InputJump() {
 	}
 }
 void Player::InputShift() {
-	if (!b.isDodging && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) && b.canDodge) {
+	if (!b.isDodging &&( sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) ||
+		sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)) && b.canDodge) {
 		b.isDodging = true;
 		b.isDodgeBoost = true;
 		b.canDodge = false;
-		gT.dodgeTimer = 0;
+		gT.dodgeTimer = GameMagicNumbers::zero;
 		gT.dodgeBoostTimer = GameMagicNumbers::zero;
 
 	}
@@ -179,19 +189,21 @@ void Player::InputShift() {
 
 
 void Player::MovementAnimation() {
-	if (!b.isJumping) {
-		aT.animationTime += this->deltaTime;
-		if (aT.animationTime >= aT.animationRate) {
-			aT.animationTime -= aT.animationRate;
-			if (b.isMovingLeft || b.isMovingRight || b.isGravityAffecting && !b.isDodgeBoost) {
-				auto& counter = this->b.isMovingLeft ? c.counterLeft : c.counterRight;
-				gameObject.utility.UpdateAnimation(this->sprite, this->playerAnimation, counter , aSP.run , aS.animationSize);
-			}
-			else {gameObject.utility.UpdateAnimation(this->sprite, this->playerAnimation, c.counterIdle, aSP.idle , aS.idleSize);}
+	if (b.isJumping) { return; }
+
+	aT.animationTime += this->deltaTime;
+	if (aT.animationTime >= aT.animationRate) {
+		aT.animationTime -= aT.animationRate;
+		if ((b.isMovingLeft || b.isMovingRight || b.isGravityAffecting) && !b.isDodgeBoost) {
+			gameObject.utility.UpdateAnimation(this->sprite, this->playerAnimation,
+				(this->b.isMovingLeft ? c.counterLeft : c.counterRight),
+				aSP.run, aS.animationSize);
 		}
+		else { gameObject.utility.UpdateAnimation(this->sprite, this->playerAnimation, c.counterIdle, aSP.idle, aS.idleSize); }
 	}
-	float desiredScale = b.isMovingLeft ? -GameMagicNumbers::playerScale : GameMagicNumbers::playerScale;
-	sprite.setScale(desiredScale, GameMagicNumbers::playerScale);
+	if (b.isMovingLeft != b.isMovingRight) {
+		sprite.setScale((b.isMovingLeft ? -GameMagicNumbers::playerScale : GameMagicNumbers::playerScale), GameMagicNumbers::playerScale);
+	}
 }
 
 void Player::ShiftAnimation(){
@@ -218,3 +230,31 @@ void Player::JumpAnimation() {
 
 
 
+
+
+//------------------------------- for projectile ---------------------
+
+
+void Player::ProjectileLoad(){
+	if (gT.fireRate >= gT.fireTime) { b.isFiring = false; }
+	if (b.isFiring) {return; }
+	//std::cout << gT.fireTime << std::endl;
+	gT.fireTime += this->deltaTime;
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && gT.fireRate <= gT.fireTime) {
+		b.isFiring = true;
+		gT.fireTime = 0;
+		projectile.push_back(std::make_unique<AuraSlice>());
+	}
+}
+
+void Player::ProjectielUpdate(){
+	for (unsigned int i = 0; i < projectile.size(); i++) {
+		projectile[i]->Update(deltaTime);
+	}
+}
+
+void Player::ProjectileDraw() {
+	for (unsigned int i = 0; i < this->projectile.size(); i++) {
+		projectile[i]->Draw();
+	}
+}

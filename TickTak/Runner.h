@@ -1,6 +1,8 @@
 //Runner.h
 #pragma once
-#include"GameObject.h"
+#include<SFML/Graphics.hpp>
+#include<memory>
+#include<vector>
 
 class Runner
 {
@@ -13,6 +15,8 @@ private:
 	sf::Vector2f playerPosition;
 public:
 	Runner();
+public:
+	std::shared_ptr<sf::RenderWindow>& GetWindow() { return window; }
 public:
 	void SfmlEvent();
 	void Load();

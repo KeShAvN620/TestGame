@@ -3,28 +3,30 @@
 #include <SFML/Graphics.hpp>
 #include<vector>
 #include<string>
+#include<memory>
+#include"../Projectile/AuraSlice.h"
 class Player
 {
 private:
 	struct GameMechanicTime {
-	private:
 		float tempdeltatime = 0.0166667f;
-	public:
 		float jumpBoostTimer = 0.0f;
 		float jumpBoostRate = 20.0f * tempdeltatime;
 		float dodgeBoostTimer = 0.0f;
-		float dodgeBoostRate = 10.0f * tempdeltatime;
+		float dodgeBoostRate = 4.0f * tempdeltatime;
 		float dodgeTimer = 0.0f;
-		float dodgeRate = 40.0f * tempdeltatime;
+		float dodgeRate = 70.0f * tempdeltatime;
+		float fireTime = 0.0f;
+		float fireRate = 100.0f * tempdeltatime;
 	};
+
 	struct AnimationTimer {
-	private:
 		float tempdeltatime = 0.0166667f;
-	public:
 		float animationTime = 0;
 		float animationRate = 8.0f * tempdeltatime;
 		float jumpAnimationTime = 0;
 	};
+
 	struct AnimationStartingPoint {
 		unsigned int frequencyX;
 		unsigned int frequencyY;
@@ -36,11 +38,13 @@ private:
 		unsigned int jumpSecondhalf;
 		unsigned int attack1;
 	};
+
 	struct AnimationSize {
 		unsigned int idleSize = 4;
 		unsigned int animationSize;
 		unsigned int jumpAndSlide = 2;
 	};
+
 	struct Bool {
 		bool isMovingRight = false;
 		bool isMovingLeft = false;
@@ -49,7 +53,9 @@ private:
 		bool isGravityAffecting = false;
 		bool isDodging = false; bool canDodge = true;
 		bool isDodgeBoost = false;
+		bool isFiring = false;
 	};
+
 	struct Counter {
 		unsigned int counterLeft = 0;
 		unsigned int counterRight = 0;
@@ -57,8 +63,8 @@ private:
 		unsigned int counterJumpFirst = 0;
 		unsigned int counterJumpSecond = 0;
 		unsigned int counterSlide = 0;
-
 	};
+
 private:
 	sf::Texture texture;
 	std::vector<unsigned int> textureId;
@@ -72,13 +78,18 @@ private:
 	sf::Vector2f playerSpeed;
 	sf::Vector2f gravity;
 	sf::Vector2f counterGravity;
+
 private:
+	std::vector<std::unique_ptr<AuraSlice>>projectile;
+
+private:// struct variables
 	AnimationTimer aT;
 	GameMechanicTime gT;
 	AnimationStartingPoint aSP;
 	AnimationSize aS;
 	Bool b;
-	Counter c;  
+	Counter c;
+
 private:
 	float deltaTime;
 	float speed;
@@ -98,7 +109,10 @@ public:
 public:
 	void Load();
 	void Update( const float& deltatime);
-	void Draw(std::shared_ptr<sf::RenderWindow> window);
+	void Draw(std::shared_ptr<sf::RenderWindow>& window);
+
+
+
 private://init
 	void StructInit();
 private: //load stuff
@@ -116,6 +130,13 @@ private: //update stuff
 	void ShiftAnimation();
 	void InputJump();
 	void JumpAnimation();
+
+
+	// for projectile
+private:
+	void ProjectileLoad();
+	void ProjectielUpdate();
+	void ProjectileDraw();
 
 };
 
