@@ -17,13 +17,14 @@ private:
 
 
 private:
+	unsigned int entityId;
+	sf::Vector2f shootingPosition;
+	unsigned int maxDistance;
 	bool isCreated;
 	unsigned int counter;
 	float angle;
-	float spawnPositionOffset;
-
 public:
-	AuraSlice();
+	AuraSlice(const unsigned int entityId, const sf::Vector2f startingPosition , const unsigned int maxDistanceTravel);
 
 public:
 	void Load();

@@ -1,8 +1,10 @@
 #include "AuraSlice.h"
 #include"../GameObject.h"
 
-AuraSlice::AuraSlice():isCreated(false) , window(gameObject.runProgram.GetWindow()) , speed(3,3),
-counter(0) , angle(0) , spawnPositionOffset(2.0f){
+AuraSlice::AuraSlice(const unsigned int entityId, const sf::Vector2f startingPosition, const unsigned int maxDistanceTravel):
+	entityId(entityId) , shootingPosition(startingPosition) , maxDistance(maxDistanceTravel) ,
+	isCreated(false) , window(gameObject.runProgram.GetWindow()) , speed(GameMagicNumbers::projectileSpeed, GameMagicNumbers::projectileSpeed),
+counter(0) , angle(0) {
 	texture = gameObject.utility.GetBulletTexture();
 	for (unsigned int x = 0; x < texture.getSize().x / GameMagicNumbers::sliceSize; x++) {
 		slicePositionInFile.push_back(sf::IntRect(x, 0, GameMagicNumbers::sliceSize, GameMagicNumbers::sliceSize));
@@ -17,17 +19,14 @@ void AuraSlice::Load(){
 	CollisionBoxLoad();
 	DirectionFinder();
 	AngleFinderAndLoader();
-	// position loading
-	this->sprite.setPosition(gameObject.player->GetPlayerSprite().getPosition().x +
-		gameObject.player->GetPlayerSprite().getGlobalBounds().width / spawnPositionOffset,
-		gameObject.player->GetPlayerSprite().getPosition().y);
-	this->collisionBox.setPosition(this->sprite.getPosition());
 }
 
 void AuraSlice::Update(float& deltaTime) {
-	this->sprite.move(sf::Vector2f(this->direction.x * GameMagicNumbers::projectileSpeed * deltaTime,
-		this->direction.y * GameMagicNumbers::projectileSpeed * deltaTime));
+	this->sprite.move(sf::Vector2f(this->direction.x * this->speed.x * deltaTime , 
+		this->direction.y * this->speed.y * deltaTime));
 	this->collisionBox.setPosition(this->sprite.getPosition());
+
+
 }
 
 void AuraSlice::Draw(){
@@ -38,11 +37,14 @@ void AuraSlice::Draw(){
 
 void AuraSlice::CriticalLoad() {
 	// must me in this exact order
-	this->sprite.setOrigin(sprite.getGlobalBounds().width / 2, sprite.getGlobalBounds().height / 2);
+	this->sprite.setOrigin(this->sprite.getGlobalBounds().width / 2, this->sprite.getGlobalBounds().height / 2);
     this->sprite.setScale(GameMagicNumbers::projectileScale, GameMagicNumbers::projectileScale);
 
 	this->collisionBox.setSize(sf::Vector2f(GameMagicNumbers::sliceCollisionSize * GameMagicNumbers::projectileScale, GameMagicNumbers::sliceCollisionSize * GameMagicNumbers::projectileScale));
     this->collisionBox.setOrigin(this->collisionBox.getGlobalBounds().width/2 , this->collisionBox.getGlobalBounds().height/ 2);
+
+	this->sprite.setPosition(shootingPosition);
+	this->collisionBox.setPosition(this->sprite.getPosition());
 }
 
 void AuraSlice::CollisionBoxLoad(){
@@ -55,7 +57,7 @@ void AuraSlice::CollisionBoxLoad(){
 
 void AuraSlice::DirectionFinder(){
 	this->position = this->window->mapPixelToCoords(sf::Mouse::getPosition(*window));
-	this->direction = this->position - gameObject.player->GetPlayerSprite().getPosition();
+	this->direction = this->position - shootingPosition;
 	this->direction = gameObject.utility.NormalizedVectors(direction);
 }
 

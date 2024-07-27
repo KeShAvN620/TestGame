@@ -21,7 +21,6 @@ void Map1::Update() {
     playerPosition = gameObject.player->GetPlayerSprite().getPosition();
     for (unsigned int i = GameMagicNumbers::zero; i < level1.size(); i++) {
         pathPosition = level1[i]->GetPathSprite().getPosition();
-
         if (gameObject.utility.UpdateAndDrawEnabler(playerPosition, pathPosition)) {continue;}
         //std::cout << gameObject.utility.UpdateAndDrawEnabler(playerPosition, pathPosition) <<" " << std::setw(4)<< i << std::endl;
         level1[i]->Update();

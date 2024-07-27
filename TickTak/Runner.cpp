@@ -43,8 +43,9 @@ void Runner::Draw(){
 
 void Runner::UpdateCamera(){
 	playerPosition = gameObject.player->GetPlayerSprite().getPosition();
-	//std::cout << playerPosition.x << " " << playerPosition.y << std::endl;
-	viewCamera.setCenter(playerPosition.x, GameMagicNumbers::windowMaxHeight / 2);
+
+	viewCamera.setCenter((playerPosition.x - GameMagicNumbers::windowMaxWidth / 2 > 0)? playerPosition.x : GameMagicNumbers::windowMaxWidth / 2,
+		GameMagicNumbers::windowMaxHeight / 2);
 	window->setView(viewCamera);
 }
 

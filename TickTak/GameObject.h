@@ -13,7 +13,7 @@
 struct GameObject
 {
 	Runner runProgram;
-	Utiluty utility;
+	Utility utility;
 	Collision collision;
 	Physic physic;
 	std::shared_ptr<Player> player = std::make_shared<Player>();

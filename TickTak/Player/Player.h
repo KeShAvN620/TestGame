@@ -17,7 +17,7 @@ private:
 		float dodgeTimer = 0.0f;
 		float dodgeRate = 70.0f * tempdeltatime;
 		float fireTime = 0.0f;
-		float fireRate = 100.0f * tempdeltatime;
+		float fireRate = 30.0f * tempdeltatime;
 	};
 
 	struct AnimationTimer {
@@ -66,22 +66,17 @@ private:
 	};
 
 private:
+	unsigned int playerId;
 	sf::Texture texture;
 	std::vector<unsigned int> textureId;
 	sf::Sprite sprite;
 	sf::RectangleShape playerCollisionBox;
+	sf::Text playerPositionText;
 private:
 	std::vector<sf::IntRect> playerAnimation;
-
-private:
-	sf::Text playerPositionText;
-	sf::Vector2f playerSpeed;
-	sf::Vector2f gravity;
-	sf::Vector2f counterGravity;
-
-private:
+private://dependencies
+	std::shared_ptr<sf::RenderWindow> window;
 	std::vector<std::unique_ptr<AuraSlice>>projectile;
-
 private:// struct variables
 	AnimationTimer aT;
 	GameMechanicTime gT;
@@ -89,12 +84,14 @@ private:// struct variables
 	AnimationSize aS;
 	Bool b;
 	Counter c;
-
-private:
+private://variables
+	sf::Vector2f playerSpeed;
+	sf::Vector2f gravity;
+	sf::Vector2f counterGravity;
 	float deltaTime;
 	float speed;
-
-
+	float playerToMouseDistance;
+	unsigned int maxShootingDistance;
 
 public:
 	Player();
@@ -127,6 +124,7 @@ private: //update stuff
 	void InputShift();
 	void AnimationHandle();
 	void MovementAnimation();
+	void SetScaleForPlayer();
 	void ShiftAnimation();
 	void InputJump();
 	void JumpAnimation();

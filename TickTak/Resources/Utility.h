@@ -16,7 +16,8 @@ struct GameMagicNumbers {
 
     // for player
    // static constexpr float tempdeltatime = 0.0166667f;
-
+    static constexpr unsigned int playerId = 1000000;
+    static constexpr unsigned int enemyId = 2000000;
     static constexpr float playerSpeed = 150.0f;
     static constexpr float gravity = 140.0f;
     static constexpr float gravityCounter = 3.0f * gravity;
@@ -42,25 +43,35 @@ struct GameMagicNumbers {
     static constexpr float minimumDistance = 96.0f;
     static constexpr float minimumUpdateDistanceX = 400.0f;
     static constexpr float minimumUpdateDistanceY = minimumUpdateDistanceX * .75f;
+
     // for slice
     static constexpr float sliceSize = 15.0f;
     static constexpr float sliceCollisionSize = sliceSize -1.0f;
-    static constexpr float projectileScale = 1.6f * playerScale;
-    static constexpr float projectileSpeed = 6.0f * playerSpeed;
+    static constexpr float projectileScale = 2.0f * playerScale;
+    static constexpr float projectileSpeed = 4.0f * playerSpeed;
     static constexpr float PI = 3.14159f;
     static constexpr unsigned int oneEightyDegree = 180;
+    static constexpr unsigned int bulletMaxDistanceByPlayer = 90;
+
 };
 
 
-class Utiluty
+class Utility
 {
     sf::Font font;
     sf::Texture playerTexture;
     sf::Texture bulletTexture;
+private:
+    float dx;
+    float dy;
+    float distanceSquared;
+    float minimumDistanceSquared;
+
+    float length;
 public:
     std::vector<sf::Color> colors;
 public:
-    Utiluty();
+    Utility();
 
 private:
     void ColorLoader();
@@ -72,8 +83,8 @@ public:
 public:
 
    void UpdateAnimation(sf::Sprite& aSprite, std::vector<sf::IntRect>& aFrame, unsigned int& aCounter,const unsigned int& aStart , const unsigned int& aSize );
-   bool UpdateAndDrawEnabler(sf::Vector2f& playerPosition , sf::Vector2f& pathPosition);
-   bool MinimumDistanceCollisionUpdate(sf::Vector2f& position1 , sf::Vector2f& position2);
+   bool UpdateAndDrawEnabler(const sf::Vector2f& playerPosition ,const  sf::Vector2f& pathPosition);
+   bool MinimumDistanceCollisionUpdate( const sf::Vector2f& position1 ,const sf::Vector2f& position2);
    sf::Vector2f NormalizedVectors(sf::Vector2f& vector);
    
 };

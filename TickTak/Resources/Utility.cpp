@@ -1,7 +1,7 @@
 //utility.cpp
 #include"Utility.h"
 
-Utiluty::Utiluty() {
+Utility::Utility(): dx(0) , dy(0), distanceSquared(0) , minimumDistanceSquared(0) , length(0){
 	if (!font.loadFromFile("Assets/Fonts/arial.ttf")) {
 		std::cerr << "Error loading font\n";
 		return;
@@ -13,7 +13,7 @@ Utiluty::Utiluty() {
 	ColorLoader();
 }
 
-void Utiluty::ColorLoader(){
+void Utility::ColorLoader(){
 	colors = {
 	  sf::Color::White,
 	  sf::Color::Red,
@@ -29,13 +29,13 @@ void Utiluty::ColorLoader(){
 	};
 }
 
-void Utiluty::LoadBullet(){
+void Utility::LoadBullet(){
 	if (!bulletTexture.loadFromFile("Assets/Bullets/Bullets.png")) {
 		std::cerr << "Error loading BulletSprite\n";
 	}
 }
 
-void Utiluty::UpdateAnimation(sf::Sprite& aSprite, std::vector<sf::IntRect>& aFrame, unsigned int& aCounter, const unsigned int& aStart, const unsigned int& aSize) {
+void Utility::UpdateAnimation(sf::Sprite& aSprite, std::vector<sf::IntRect>& aFrame, unsigned int& aCounter, const unsigned int& aStart, const unsigned int& aSize) {
 	if (!aFrame.empty()) {
 		aCounter = (aCounter + 1) % aSize;
 		aSprite.setTextureRect(aFrame[aStart + aCounter]);
@@ -46,18 +46,24 @@ void Utiluty::UpdateAnimation(sf::Sprite& aSprite, std::vector<sf::IntRect>& aFr
 	}
 }
 
-bool Utiluty::UpdateAndDrawEnabler(sf::Vector2f& playerPosition, sf::Vector2f& pathPosition){
-	return abs(playerPosition.x - pathPosition.x) >= GameMagicNumbers::minimumUpdateDistanceX &&
-		abs(playerPosition.y - pathPosition.y) >= GameMagicNumbers::minimumUpdateDistanceY;
+bool Utility::UpdateAndDrawEnabler(const sf::Vector2f& playerPosition, const sf::Vector2f& pathPosition) {
+    dx = playerPosition.x - pathPosition.x;
+    dy = playerPosition.y - pathPosition.y;
+	bool withinX = std::abs(dx) > GameMagicNumbers::minimumUpdateDistanceX;
+	bool withinY = std::abs(dy) > GameMagicNumbers::minimumUpdateDistanceY;
+	return withinX && withinY;
 }
 
-bool Utiluty::MinimumDistanceCollisionUpdate(sf::Vector2f& position1, sf::Vector2f& position2){
-	return abs(position1.x - position2.x) >= GameMagicNumbers::minimumDistance &&
-		abs(position1.y - position2.y) >= GameMagicNumbers::minimumDistance;
+bool Utility::MinimumDistanceCollisionUpdate(const sf::Vector2f& position1, const sf::Vector2f& position2){
+	dx = position1.x - position2.x;
+	dy = position1.y - position2.y;
+	distanceSquared = dx * dx + dy * dy;
+	minimumDistanceSquared = GameMagicNumbers::minimumDistance * GameMagicNumbers::minimumDistance;
+	return distanceSquared > minimumDistanceSquared;
 }
 
-sf::Vector2f Utiluty::NormalizedVectors(sf::Vector2f& vector){
-	float length = sqrt(vector.x * vector.x + vector.y * vector.y);
+sf::Vector2f Utility::NormalizedVectors(sf::Vector2f& vector){
+	length = sqrt(vector.x * vector.x + vector.y * vector.y);
 	if (length == 0) {
 		return vector;
 	}

@@ -2,9 +2,9 @@
 #include "Player.h"
 #include"../GameObject.h"
 
-Player::Player()
-	: deltaTime(0.0f), speed(GameMagicNumbers::playerSpeed), playerSpeed(0.0f, 0.0f), gravity(0,GameMagicNumbers::gravity),
-	counterGravity(0,GameMagicNumbers::gravityCounter) {  
+Player::Player():
+	playerId(GameMagicNumbers::playerId) ,deltaTime(0.0f), speed(GameMagicNumbers::playerSpeed), playerSpeed(0.0f, 0.0f), gravity(0,GameMagicNumbers::gravity),
+	counterGravity(0,GameMagicNumbers::gravityCounter) , window(gameObject.runProgram.GetWindow()) , playerToMouseDistance(0), maxShootingDistance(80){
 
 	this->texture = gameObject.utility.GetPlayerTexture();
 	aSP.frequencyX = texture.getSize().x / GameMagicNumbers::spriteSize;
@@ -190,7 +190,6 @@ void Player::InputShift() {
 
 void Player::MovementAnimation() {
 	if (b.isJumping) { return; }
-
 	aT.animationTime += this->deltaTime;
 	if (aT.animationTime >= aT.animationRate) {
 		aT.animationTime -= aT.animationRate;
@@ -201,8 +200,16 @@ void Player::MovementAnimation() {
 		}
 		else { gameObject.utility.UpdateAnimation(this->sprite, this->playerAnimation, c.counterIdle, aSP.idle, aS.idleSize); }
 	}
+	SetScaleForPlayer();
+}
+
+void Player::SetScaleForPlayer(){
 	if (b.isMovingLeft != b.isMovingRight) {
 		sprite.setScale((b.isMovingLeft ? -GameMagicNumbers::playerScale : GameMagicNumbers::playerScale), GameMagicNumbers::playerScale);
+	}
+	else {
+		this->playerToMouseDistance = this->window->mapPixelToCoords(sf::Mouse::getPosition(*this->window)).x - this->sprite.getPosition().x;
+		sprite.setScale((this->playerToMouseDistance >= 0 ? GameMagicNumbers::playerScale : -GameMagicNumbers::playerScale), GameMagicNumbers::playerScale);
 	}
 }
 
@@ -238,12 +245,29 @@ void Player::JumpAnimation() {
 void Player::ProjectileLoad(){
 	if (gT.fireRate >= gT.fireTime) { b.isFiring = false; }
 	if (b.isFiring) {return; }
-	//std::cout << gT.fireTime << std::endl;
 	gT.fireTime += this->deltaTime;
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && gT.fireRate <= gT.fireTime) {
 		b.isFiring = true;
-		gT.fireTime = 0;
-		projectile.push_back(std::make_unique<AuraSlice>());
+		gT.fireTime = 0; 
+		sf::Vector2f shootingPosition;
+		this->playerToMouseDistance = this->window->mapPixelToCoords(sf::Mouse::getPosition(*this->window)).x - this->sprite.getPosition().x;
+
+		if (b.isMovingLeft && this->playerToMouseDistance < 0) {
+        shootingPosition.x = this->sprite.getPosition().x - this->sprite.getGlobalBounds().width / 2 - GameMagicNumbers::one;
+		shootingPosition.y = this->sprite.getPosition().y;
+		}
+		else if (b.isMovingRight && this->playerToMouseDistance > 0) {
+			shootingPosition.x = this->sprite.getPosition().x + this->sprite.getGlobalBounds().width / 2 + GameMagicNumbers::one;
+			shootingPosition.y = this->sprite.getPosition().y;
+		}
+		else if (!b.isMovingLeft && !b.isMovingRight){
+			shootingPosition.x = this->sprite.getPosition().x +
+				(playerToMouseDistance >= 0 ? (this->sprite.getGlobalBounds().width / + GameMagicNumbers::one) :
+					-(this->sprite.getGlobalBounds().width / 2 + GameMagicNumbers::one));
+			shootingPosition.y = this->sprite.getPosition().y;
+		}
+		else { return; }
+		projectile.push_back(std::make_unique<AuraSlice>(this->playerId, shootingPosition, this->maxShootingDistance));
 	}
 }
 
