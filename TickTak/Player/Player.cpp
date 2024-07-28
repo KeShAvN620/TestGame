@@ -189,25 +189,23 @@ void Player::InputShift() {
 
 
 void Player::MovementAnimation() {
-	if (b.isJumping) { return; }
-	aT.animationTime += this->deltaTime;
-	if (aT.animationTime >= aT.animationRate) {
-		aT.animationTime -= aT.animationRate;
-		if ((b.isMovingLeft || b.isMovingRight || b.isGravityAffecting) && !b.isDodgeBoost) {
-			gameObject.utility.UpdateAnimation(this->sprite, this->playerAnimation,
-				(this->b.isMovingLeft ? c.counterLeft : c.counterRight),
-				aSP.run, aS.animationSize);
-		}
-		else { gameObject.utility.UpdateAnimation(this->sprite, this->playerAnimation, c.counterIdle, aSP.idle, aS.idleSize); }
-	}
 	SetScaleForPlayer();
+	if (b.isJumping) {return;}
+		aT.animationTime += this->deltaTime;
+		if (aT.animationTime >= aT.animationRate) {
+			aT.animationTime -= aT.animationRate;
+			auto& counter = (b.isMovingLeft ? c.counterLeft : c.counterRight);
+			auto& size = (b.isMovingLeft || b.isMovingRight || b.isGravityAffecting) && !b.isDodgeBoost ? aSP.run : aSP.idle;
+			auto& animationSize = (b.isMovingLeft || b.isMovingRight || b.isGravityAffecting) && !b.isDodgeBoost ? aS.animationSize : aS.idleSize;
+			gameObject.utility.UpdateAnimation(sprite, playerAnimation, counter, size, animationSize);
+		}
 }
 
-void Player::SetScaleForPlayer(){
+void Player::SetScaleForPlayer() {
 	if (b.isMovingLeft != b.isMovingRight) {
 		sprite.setScale((b.isMovingLeft ? -GameMagicNumbers::playerScale : GameMagicNumbers::playerScale), GameMagicNumbers::playerScale);
 	}
-	else {
+	else if (!b.isJumping) {
 		this->playerToMouseDistance = this->window->mapPixelToCoords(sf::Mouse::getPosition(*this->window)).x - this->sprite.getPosition().x;
 		sprite.setScale((this->playerToMouseDistance >= 0 ? GameMagicNumbers::playerScale : -GameMagicNumbers::playerScale), GameMagicNumbers::playerScale);
 	}
