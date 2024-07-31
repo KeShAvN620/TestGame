@@ -13,7 +13,8 @@ void Collision::CollisionReseter(){
     position2.x = 0;position2.y = 0;
 }
 
-void Collision::UpdateAnimation(sf::Sprite& animationSprite, unsigned int& animationCounter, std::vector<sf::IntRect>& animationFrame) {
+void Collision::UpdateAnimation(sf::Sprite& animationSprite, 
+    unsigned int& animationCounter, std::vector<sf::IntRect>& animationFrame) {
     if (!animationFrame.empty()) {
         animationCounter = (animationCounter + 1) % animationFrame.size();
         animationSprite.setTextureRect(animationFrame[animationCounter]);
@@ -24,14 +25,16 @@ void Collision::UpdateAnimation(sf::Sprite& animationSprite, unsigned int& anima
     }
 }
 
-void Collision::PathPlayerCollidionDetection(const sf::RectangleShape& sprite1, const sf::RectangleShape& sprite2, sf::Sprite& sprite3, bool& boxLeft, bool& boxRight, bool& boxTop, bool& boxBottom) {
+void Collision::PathPlayerCollidionDetection(const sf::RectangleShape& sprite1,
+    const sf::RectangleShape& sprite2, sf::Sprite& sprite3, bool& boxLeft,
+    bool& boxRight, bool& boxTop, bool& boxBottom) {
     bounds1 = sprite1.getGlobalBounds();
     bounds2 = sprite2.getGlobalBounds();
     if (bounds1.intersects(bounds2)) {
         BoundFinder();
         BoolFinder();
         if (fromTop && !boxTop) {
-            sprite3.setPosition(sprite3.getPosition().x, bounds2.top +GameMagicNumbers::oneAndHalf - bounds1.height / 2);
+            sprite3.setPosition(sprite3.getPosition().x, bounds2.top + GMnumber::oneAndHalf - bounds1.height / 2);
             gameObject.player->IsJumping() = false;
         }
         else if (fromBottom && !boxBottom ) {
@@ -39,10 +42,10 @@ void Collision::PathPlayerCollidionDetection(const sf::RectangleShape& sprite1, 
             gameObject.player->IsGravityBoost() = false;
         }
         else if (fromLeft && !boxLeft) {
-            sprite3.setPosition(bounds2.left - bounds1.width / 2 -GameMagicNumbers::oneAndHalf, sprite3.getPosition().y);
+            sprite3.setPosition(bounds2.left - bounds1.width / 2 - GMnumber::oneAndHalf, sprite3.getPosition().y);
         }
         else if (fromRight&& !boxRight) {
-            sprite3.setPosition(bounds2.left + bounds2.width + bounds1.width/2 + GameMagicNumbers::oneAndHalf, sprite3.getPosition().y);
+            sprite3.setPosition(bounds2.left + bounds2.width + bounds1.width/2 + GMnumber::oneAndHalf, sprite3.getPosition().y);
         }
     }
     CollisionReseter();
@@ -51,6 +54,7 @@ void Collision::PathPlayerCollidionDetection(const sf::RectangleShape& sprite1, 
 
 void Collision::PreliminarySearch(std::vector<std::shared_ptr<BackGround>>& level1) {
     for (unsigned int i = 0; i < level1.size(); i++) {
+        if (level1[i]->c.DetectionAlreadyDone) { continue; }
         bounds1 = level1[i]->GetPathSprite().getGlobalBounds(); 
         position1 = level1[i]->GetPathSprite().getPosition();  //std::cout << "Bounds3 (Object " << i << "): " << bounds1.left << ", " << bounds1.top << ", "<< bounds1.width << ", "<< bounds1.height << std::endl;
         for (unsigned int j = 0; j < level1.size(); j++) {
@@ -65,23 +69,24 @@ void Collision::PreliminarySearch(std::vector<std::shared_ptr<BackGround>>& leve
                 BoundFinder();
                 BoolFinder();
                 if (fromLeft) {                    //std::cout << "Lp" << std::endl;
-                    level1[i]->skipCollisionCheckRight = true;
-                    level1[j]->skipCollisionCheckLeft = true;
+                    level1[i]->c.skipRight = true;
+                    level1[j]->c.skipLeft = true;
                 }
                 if (fromRight) {                    //std::cout << "Rp" << std::endl
-                    level1[i]->skipCollisionCheckLeft = true;
-                    level1[j]->skipCollisionCheckRight = true;
+                    level1[i]->c.skipLeft = true;
+                    level1[j]->c.skipRight = true;
                 }
                 if (fromTop) {                        //std::cout << "Tp" << std::endl;
-                    level1[i]->skipCollisionCheckBottom = true;
-                    level1[j]->skipCollisionCheckTop = true;
+                    level1[i]->c.skipBottom = true;
+                    level1[j]->c.skipTop = true;
                 }
                 if (fromBottom) {                    //std::cout << "Bp" << std::endl;
-                    level1[i]->skipCollisionCheckTop = true;
-                    level1[j]->skipCollisionCheckBottom = true;
+                    level1[i]->c.skipTop = true;
+                    level1[j]->c.skipBottom = true;
                 }
             }
         }
+        level1[i]->c.DetectionAlreadyDone = true;
         CollisionReseter();
     }
 }

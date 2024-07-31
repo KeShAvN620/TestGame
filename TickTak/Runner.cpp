@@ -2,11 +2,11 @@
 #include "Runner.h"
 #include"GameObject.h"
 
-Runner::Runner():window(std::make_shared<sf::RenderWindow>(sf::VideoMode(static_cast<int>(GameMagicNumbers::windowMaxWidth),
-	static_cast<int>(GameMagicNumbers::windowMaxHeight)), "SFML works!")),
-	viewCamera(sf::FloatRect(GameMagicNumbers::zero , GameMagicNumbers::zero, window->getSize().x , window->getSize().y))
+Runner::Runner():window(std::make_shared<sf::RenderWindow>(sf::VideoMode(static_cast<int>(GMnumber::windowMaxWidth),
+	static_cast<int>(GMnumber::windowMaxHeight)), "SFML works!")),
+	viewCamera(sf::FloatRect(int(GMnumber::zero), int(GMnumber::zero), int(window->getSize().x), int(window->getSize().y)))
 	,event(), deltaTime(0.0f) , playerPosition(0,0){
-	window->setFramerateLimit(GameMagicNumbers::maxFrameRate);
+	window->setFramerateLimit(GMnumber::maxFrameRate);
 }
 
 void Runner::SfmlEvent(){
@@ -44,8 +44,8 @@ void Runner::Draw(){
 void Runner::UpdateCamera(){
 	playerPosition = gameObject.player->GetPlayerSprite().getPosition();
 
-	viewCamera.setCenter((playerPosition.x - GameMagicNumbers::windowMaxWidth / 2 > 0)? playerPosition.x : GameMagicNumbers::windowMaxWidth / 2,
-		GameMagicNumbers::windowMaxHeight / 2);
+	viewCamera.setCenter((playerPosition.x - GMnumber::windowMaxWidth / 2 > 0)? playerPosition.x : GMnumber::windowMaxWidth / 2,
+		GMnumber::windowMaxHeight / 2);
 	window->setView(viewCamera);
 }
 

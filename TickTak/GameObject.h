@@ -9,6 +9,7 @@
 #include"Physic/Physic.h"
 #include "Map/Map1.h"
 #include"Runner.h"
+#include"IO/FileRead.h"
 
 struct GameObject
 {
@@ -16,9 +17,9 @@ struct GameObject
 	Utility utility;
 	Collision collision;
 	Physic physic;
+	FileRead fileRescource;
 	std::shared_ptr<Player> player = std::make_shared<Player>();
 	std::shared_ptr<Map1> map1 = std::make_shared<Map1>();
-
 	}; 
 extern GameObject gameObject;
     

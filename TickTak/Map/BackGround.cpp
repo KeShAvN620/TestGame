@@ -1,12 +1,17 @@
 //Background.cpp
 #include "BackGround.h"
 #include"../GameObject.h"
+BackGround::BackGround(float xPosSacle, float yPosSacle, unsigned int colorCode , bool left, bool right, bool top, bool bottom, bool done):
 
-BackGround::BackGround(const float wPositionScale, const float hPositionScale, unsigned int colorCode) :
-    pathSize(GameMagicNumbers::pathSize, GameMagicNumbers::pathSize),
-    pathPosition(GameMagicNumbers::windowMaxWidth* wPositionScale, GameMagicNumbers::windowMaxHeight* hPositionScale),
-    pathColor(gameObject.utility.colors[colorCode]), playerPosition(0, 0), skipCollisionCheckLeft(false), skipCollisionCheckRight(false),
-    skipCollisionCheckTop(false), skipCollisionCheckBottom(false) {}
+    pathSize(GMnumber::pathSize, GMnumber::pathSize),
+    pathPosition(GMnumber::windowMaxWidth* xPosSacle, GMnumber::windowMaxHeight* yPosSacle),
+    pathColor(gameObject.utility.colors[colorCode]), playerPosition(0, 0) {
+    c.DetectionAlreadyDone = done;
+    c.skipLeft = left;
+    c.skipRight = right;
+    c.skipTop = top;
+    c.skipBottom = bottom;
+}
 
 
 void BackGround::Load() {
@@ -23,7 +28,8 @@ void BackGround::CollisonDetection() {
     this->playerPosition = gameObject.player->GetPlayerSprite().getPosition();
   if (!gameObject.utility.MinimumDistanceCollisionUpdate(playerPosition, pathPosition)) {
       //std::cout << gameObject.utility.MinimumDistanceCollisionUpdate(playerPosition, pathPosition) << std::endl;
-    gameObject.collision.PathPlayerCollidionDetection(gameObject.player->GetPlayerCollisionBox(), this->backGroundPath, gameObject.player->GetPlayerSprite(), this->skipCollisionCheckLeft, this->skipCollisionCheckRight, this->skipCollisionCheckTop, this->skipCollisionCheckBottom);
+    gameObject.collision.PathPlayerCollidionDetection(gameObject.player->GetPlayerCollisionBox(), this->backGroundPath, gameObject.player->GetPlayerSprite()
+        , c.skipLeft, c.skipRight, c.skipTop, c.skipBottom);
   }
 }
 

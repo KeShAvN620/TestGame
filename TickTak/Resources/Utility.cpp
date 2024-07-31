@@ -49,8 +49,8 @@ void Utility::UpdateAnimation(sf::Sprite& aSprite, std::vector<sf::IntRect>& aFr
 bool Utility::UpdateAndDrawEnabler(const sf::Vector2f& playerPosition, const sf::Vector2f& pathPosition) {
     dx = playerPosition.x - pathPosition.x;
     dy = playerPosition.y - pathPosition.y;
-	bool withinX = std::abs(dx) > GameMagicNumbers::minimumUpdateDistanceX;
-	bool withinY = std::abs(dy) > GameMagicNumbers::minimumUpdateDistanceY;
+	bool withinX = std::abs(dx) > GMnumber::minimumUpdateDistanceX;
+	bool withinY = std::abs(dy) > GMnumber::minimumUpdateDistanceY;
 	return withinX && withinY;
 }
 
@@ -58,7 +58,7 @@ bool Utility::MinimumDistanceCollisionUpdate(const sf::Vector2f& position1, cons
 	dx = position1.x - position2.x;
 	dy = position1.y - position2.y;
 	distanceSquared = dx * dx + dy * dy;
-	minimumDistanceSquared = GameMagicNumbers::minimumDistance * GameMagicNumbers::minimumDistance;
+	minimumDistanceSquared = GMnumber::minimumDistance * GMnumber::minimumDistance;
 	return distanceSquared > minimumDistanceSquared;
 }
 

@@ -4,8 +4,16 @@
 #include<memory>
 #include<string>
 
+
 class BackGround
 {	
+	struct Cleck {
+		bool skipLeft;
+		bool skipRight;
+		bool skipTop;
+		bool skipBottom;
+		bool DetectionAlreadyDone;
+	};
 private:
 	sf::RectangleShape backGroundPath;
 	sf::Vector2f pathSize; 
@@ -13,13 +21,10 @@ private:
 	sf::Vector2f playerPosition;
 	sf::Color pathColor;
 public:
-	bool skipCollisionCheckLeft;
-	bool skipCollisionCheckRight;
-	bool skipCollisionCheckTop;
-	bool skipCollisionCheckBottom;
-
+	Cleck c;
+	
 public:
-	BackGround(const float wPositionScale, const float hPositionScale ,unsigned int colorCode = 6);
+	BackGround(float xPosSacle, float yPosSacle, unsigned int colorCode , bool left, bool right , bool top , bool bottom , bool done);
 public:
 	sf::RectangleShape& GetPathSprite() { return backGroundPath; }
 public:

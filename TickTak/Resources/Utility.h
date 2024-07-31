@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 
 
-struct GameMagicNumbers {
+struct GMnumber {
     // for windows
     static constexpr float baseWidth = 800.0f;
     static constexpr float baseHeight = 600.0f;
@@ -31,7 +31,7 @@ struct GameMagicNumbers {
     static constexpr unsigned int one = 1;
     static constexpr float quater = .25f;
     static constexpr float collisionBoxThickness = 1.0f;
-    static constexpr float collisionBoxSizeScale = (3.2f / 4.0f);
+    static constexpr float collisionBoxSizeScale = (2.2f / 4.0f);
     static constexpr float collisionBoxSizeX = playerScale * spriteSize * collisionBoxSizeScale - one;
     static constexpr float collisionBoxSizeY = playerScale * spriteSize - one;
 
@@ -46,12 +46,14 @@ struct GameMagicNumbers {
 
     // for slice
     static constexpr float sliceSize = 15.0f;
-    static constexpr float sliceCollisionSize = sliceSize -1.0f;
+    static constexpr unsigned int  newSliceSizeX = 25;
+    static constexpr unsigned int  newSliceSizeY = 30;
+    static constexpr float sliceCollisionSize = sliceSize - 1.0f;
     static constexpr float projectileScale = 2.0f * playerScale;
     static constexpr float projectileSpeed = 4.0f * playerSpeed;
     static constexpr float PI = 3.14159f;
     static constexpr unsigned int oneEightyDegree = 180;
-    static constexpr unsigned int bulletMaxDistanceByPlayer = 90;
+    static constexpr unsigned int bulletMaxDistanceByPlayer = static_cast<unsigned int >(windowMaxWidth /3.30f);
 
 };
 

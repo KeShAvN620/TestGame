@@ -17,7 +17,7 @@ private:
 		float dodgeTimer = 0.0f;
 		float dodgeRate = 70.0f * tempdeltatime;
 		float fireTime = 0.0f;
-		float fireRate = 30.0f * tempdeltatime;
+		float fireRate = 60.0f * tempdeltatime;
 	};
 
 	struct AnimationTimer {
@@ -74,9 +74,11 @@ private:
 	sf::Text playerPositionText;
 private:
 	std::vector<sf::IntRect> playerAnimation;
+
 private://dependencies
 	std::shared_ptr<sf::RenderWindow> window;
 	std::vector<std::unique_ptr<AuraSlice>>projectile;
+
 private:// struct variables
 	AnimationTimer aT;
 	GameMechanicTime gT;
@@ -84,6 +86,7 @@ private:// struct variables
 	AnimationSize aS;
 	Bool b;
 	Counter c;
+
 private://variables
 	sf::Vector2f playerSpeed;
 	sf::Vector2f gravity;
@@ -102,6 +105,7 @@ public:
 	inline bool& IsGravityBoost() { return b.isJumpBoost; }
 	inline bool& IsGravityAffecting() { return b.isGravityAffecting; }
 	inline bool& CanDodging() { return b.canDodge;}
+	inline 	std::vector<std::unique_ptr<AuraSlice>>& GetProjectileVector() { return projectile; }
 
 public:
 	void Load();
@@ -112,11 +116,13 @@ public:
 
 private://init
 	void StructInit();
+
 private: //load stuff
 	void ImportantLoad();
 	void PositionTxtLoader();
 	void PositionTxtUpdate();
 	void CollisionLoad();
+
 private: //update stuff
 	void GravityAffect();
 	void InputHandle();
@@ -135,6 +141,7 @@ private:
 	void ProjectileLoad();
 	void ProjectielUpdate();
 	void ProjectileDraw();
-
+	void ProjectileDestroy(int& i );
+	void ProjectileDestroyOnPath(int& i );
 };
 
