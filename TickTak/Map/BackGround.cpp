@@ -11,6 +11,7 @@ BackGround::BackGround(float xPosSacle, float yPosSacle, unsigned int colorCode 
     c.skipRight = right;
     c.skipTop = top;
     c.skipBottom = bottom;
+    Load();
 }
 
 

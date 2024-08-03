@@ -2,10 +2,14 @@
 #include"../GameObject.h"
 
 
-AuraSlice::AuraSlice(const unsigned int entityId, const sf::Vector2f startingPosition, const unsigned int maxDistanceTravel):
-	entityId(entityId) , shootingPosition(startingPosition) , maxDistance(float(maxDistanceTravel),float(maxDistanceTravel)),
-	isCreated(false) , window(gameObject.runProgram.GetWindow()) , speed(GMnumber::projectileSpeed, GMnumber::projectileSpeed),
-counter(0) , angle(0) , isDestroyedWhenHitWithPath(false) , isDestroyedWhenOutOfReach(false){
+AuraSlice::AuraSlice(const unsigned int& entityId, const sf::Vector2f& startingPosition, const unsigned int& maxDistanceTravel):
+	entityId(entityId) , shootingPosition(startingPosition),
+	maxDistance(float(maxDistanceTravel),float(maxDistanceTravel)),
+	isCreated(false) , window(gameObject.runProgram.GetWindow()), 
+	speed(GMnumber::projectileSpeed, GMnumber::projectileSpeed),
+    counter(0) , angle(0) ,
+    isDestroyedWhenHitWithPath(false) , isDestroyedWhenOutOfReach(false){
+
 	texture = gameObject.utility.GetBulletTexture();
 	for (unsigned int x = 0; x < texture.getSize().x / GMnumber::sliceSize; x++) {
 		slicePositionInFile.push_back(sf::IntRect(x, 0,int(GMnumber::sliceSize), int(GMnumber::sliceSize)));

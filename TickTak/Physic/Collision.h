@@ -6,6 +6,7 @@
 #include<memory>
 #include<vector>
 #include"../Map/BackGround.h"
+#include"../Map/Map1.h"
 class Collision
 {
 private: // use by all
@@ -30,9 +31,14 @@ public:
     Collision();
     void CollisionReseter();
     void UpdateAnimation(sf::Sprite& animationSprite, unsigned int& animationCounter, std::vector<sf::IntRect>& animationFrame);
-    void PathPlayerCollidionDetection(const sf::RectangleShape& sprite1, const sf::RectangleShape& sprite2, sf::Sprite& sprite3, bool& boxLeft, bool& boxRight, bool& boxTop, bool& boxBottom);
-    void PreliminarySearch(std::vector<std::shared_ptr<BackGround>>& level);
-    bool PlayerOnGround(sf::Sprite& sprite, std::vector<std::shared_ptr<BackGround>>& level);
+    void PathPlayerCollidionDetection(const sf::RectangleShape& sprite1, const sf::RectangleShape& sprite2,
+        sf::Sprite& sprite3, bool& boxLeft, bool& boxRight, bool& boxTop, bool& boxBottom);
+    void PreliminarySearch(std::vector<std::shared_ptr<BackGround>>& level1 , std::vector<bool>&left , 
+        std::vector<bool>& right , std::vector<bool>& top, std::vector<bool>& bottom 
+        , std::vector<bool>&alreadydone);
+    void PreliminarySearch(std::vector<std::shared_ptr<BackGround>>& level1, Map1::PathData& VS);
+    //void PreliminarySerachV2(std::vector<std::shared_ptr<BackGround>>& level , const unsigned int i);
+    //bool PlayerOnGround(sf::Sprite& sprite, std::vector<std::shared_ptr<BackGround>>& level);
     void BoundFinder();
     void BoolFinder();
     void ExpandBound(sf::FloatRect& bound);

@@ -5,7 +5,7 @@
 
 Map1::Map1():playerPosition(0,0), pathPosition(0,0){
    gameObject.fileRescource.ReadMapData(pathdatas);
-    for (unsigned int i = GMnumber::zero; i < pathdatas.xPosition.size(); i++) {
+    for (unsigned int i = 0; i < pathdatas.xPosition.size(); i++) {
         this->level1.push_back(
             std::make_shared<BackGround>(
                 GetProperScaleX(pathdatas.xPosition[i]),
@@ -15,24 +15,20 @@ Map1::Map1():playerPosition(0,0), pathPosition(0,0){
                 bool(pathdatas.skipRight[i]),
                 bool(pathdatas.skipTop[i]),
                 bool(pathdatas.skipBottom[i]),
-                bool(pathdatas.alreadySkipCalculated[i])
-            )
-        );
+                bool(pathdatas.alreadySkipCalculated[i])));
+
 
     } 
 }
 
-void Map1::Load() { 
-    for (auto& background : this->level1) {
-        background->Load();
-    }
-    gameObject.collision.PreliminarySearch(this->level1);
-    VectorsOverWrite();
+void Map1::Load() {
+  //gameObject.collision.PreliminarySearch(level1, pathdatas.skipLeft, pathdatas.skipRight , pathdatas.skipTop,
+  //  pathdatas.skipBottom , pathdatas.alreadySkipCalculated);
+    gameObject.collision.PreliminarySearch(level1, pathdatas);
     gameObject.fileRescource.WriteMapData(this->pathdatas);
 }
 
 void Map1::Update() {
-    gameObject.player->IsGravityAffecting() = !gameObject.collision.PlayerOnGround(gameObject.player->GetPlayerSprite(), level1);
     this->playerPosition = gameObject.player->GetPlayerSprite().getPosition();
     for (unsigned int i = GMnumber::zero; i < level1.size(); i++) {
         this->pathPosition = level1[i]->GetPathSprite().getPosition();
@@ -51,18 +47,6 @@ void Map1::Draw(std::shared_ptr<sf::RenderWindow>& window) {
         level1[i]->Draw(window);
     }
 }
-
-void Map1::VectorsOverWrite(){
-    for (unsigned int i = GMnumber::zero; i < pathdatas.xPosition.size(); i++) {
-        pathdatas.skipLeft[i] = this->level1[i]->c.skipLeft;
-        pathdatas.skipRight[i] = this->level1[i]->c.skipRight;
-        pathdatas.skipTop[i] = this->level1[i]->c.skipTop;
-        pathdatas.skipBottom[i] = this->level1[i]->c.skipBottom;
-        pathdatas.alreadySkipCalculated[i] = this->level1[i]->c.DetectionAlreadyDone;
-    }
-
-}
-
 inline float Map1::GetProperScaleX(const float xPosition) {
     return (xPosition) * GMnumber::windowMaxWidth / (GMnumber::baseWidth * GMnumber::baseWidth);
 }

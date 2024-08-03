@@ -17,14 +17,17 @@ private:
 		float dodgeTimer = 0.0f;
 		float dodgeRate = 70.0f * tempdeltatime;
 		float fireTime = 0.0f;
-		float fireRate = 60.0f * tempdeltatime;
+		float fireRate = 40.0f * tempdeltatime;
+		unsigned int attackReseter = 0;
 	};
 
 	struct AnimationTimer {
 		float tempdeltatime = 0.0166667f;
-		float animationTime = 0;
+		float animationTime = 0.0f;
 		float animationRate = 8.0f * tempdeltatime;
 		float jumpAnimationTime = 0;
+		float attackAnimationRate = 5.0f * tempdeltatime;
+		float attackAnimationTime = 0.0f;
 	};
 
 	struct AnimationStartingPoint {
@@ -51,9 +54,11 @@ private:
 		bool isJumping = false;
 		bool isJumpBoost = false;
 		bool isGravityAffecting = false;
-		bool isDodging = false; bool canDodge = true;
+		bool canDodge = true;
+		bool isDodging = false;
 		bool isDodgeBoost = false;
 		bool isFiring = false;
+		bool isAttacking = false;
 	};
 
 	struct Counter {
@@ -63,6 +68,7 @@ private:
 		unsigned int counterJumpFirst = 0;
 		unsigned int counterJumpSecond = 0;
 		unsigned int counterSlide = 0;
+		unsigned int counterAttack1 = 0;
 	};
 
 private:
@@ -95,6 +101,7 @@ private://variables
 	float speed;
 	float playerToMouseDistance;
 	unsigned int maxShootingDistance;
+	sf::Vector2f shootingPosition;
 
 public:
 	Player();
@@ -134,6 +141,7 @@ private: //update stuff
 	void ShiftAnimation();
 	void InputJump();
 	void JumpAnimation();
+	void AttackAnimation();
 
 
 	// for projectile

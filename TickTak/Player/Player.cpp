@@ -3,13 +3,15 @@
 #include"../GameObject.h"
 
 Player::Player():
-	playerId(GMnumber::playerId) ,deltaTime(0.0f), speed(GMnumber::playerSpeed), playerSpeed(0.0f, 0.0f), gravity(0, GMnumber::gravity),
-	counterGravity(0, GMnumber::gravityCounter) , window(gameObject.runProgram.GetWindow()) , playerToMouseDistance(0), maxShootingDistance(GMnumber::bulletMaxDistanceByPlayer){
+	playerId(GMnumber::playerId) ,deltaTime(0.0f)
+	, speed(GMnumber::playerSpeed), playerSpeed(0.0f, 0.0f), 
+	gravity(0, GMnumber::gravity), counterGravity(0, GMnumber::gravityCounter),
+	window(gameObject.runProgram.GetWindow()) , playerToMouseDistance(0),
+	maxShootingDistance(GMnumber::bulletMaxDistanceByPlayer) , shootingPosition(0,0){
 
 	this->texture = gameObject.utility.GetPlayerTexture();
 	aSP.frequencyX = texture.getSize().x / GMnumber::spriteSize;
 	aSP.frequencyY = texture.getSize().y / GMnumber::spriteSize;
-
 	for (unsigned int y = 0 ; y < aSP.frequencyY; y++) {
 		for (unsigned int x = 0; x < aSP.frequencyX; x++) {
 			textureId.push_back(x + aSP.frequencyX * y);
@@ -46,6 +48,7 @@ void Player::Load() {
 void Player::Update( const float& deltaTime){
 	ProjectileLoad();
 	this->deltaTime = deltaTime;
+	ProjectielUpdate();
 	AnimationHandle();
 	InputHandle();
 	GravityAffect();   
@@ -54,7 +57,7 @@ void Player::Update( const float& deltaTime){
 	{ sprite.setPosition(sf::Vector2f(sprite.getPosition().x, 0)); }
 	PositionTxtUpdate(); 
 	// for projectile
-	ProjectielUpdate();
+
 
 }
 
@@ -99,7 +102,7 @@ void Player::PositionTxtUpdate(){
 void Player::CollisionLoad(){
 	this->playerCollisionBox.setPosition(sprite.getPosition());
 	this->playerCollisionBox.setOutlineThickness(GMnumber::collisionBoxThickness);
-	this->playerCollisionBox.setOutlineColor(sf::Color::Transparent);
+	this->playerCollisionBox.setOutlineColor(sf::Color::Red);
 	this->playerCollisionBox.setFillColor(sf::Color::Transparent);
 }
 
@@ -108,7 +111,7 @@ void Player::CollisionLoad(){
 //--------------------------------------- update part-------------------------------------
 void Player::GravityAffect() {
 	this->sprite.setPosition(sprite.getPosition() + this->deltaTime*(this->playerSpeed 
-			+(b.isGravityAffecting ? this->gravity : sf::Vector2f(GMnumber::zero, GMnumber::one))));
+			+ this->gravity));
 	this->playerCollisionBox.setPosition(sprite.getPosition());
 	this->playerSpeed = sf::Vector2f(GMnumber::zero, GMnumber::zero);
 }
@@ -123,6 +126,7 @@ void Player::AnimationHandle() {
 	JumpAnimation();
 	MovementAnimation();
 	ShiftAnimation();
+	AttackAnimation();
 }
 
 void Player::InputMovement()
@@ -141,13 +145,13 @@ void Player::InputMovement()
 		b.isMovingRight = false;
 		b.isMovingLeft = false;
 	}
-	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-	//	this->playerSpeed.y = -this->speed;                      //// needed for debugging
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+		this->playerSpeed.y = -this->speed*3;                      //// needed for debugging
 
-	//}
-	//else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-	//	this->playerSpeed.y = this->speed;
-	//}
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+		this->playerSpeed.y = this->speed*3;
+	}
 }
 
 void Player::InputJump() {
@@ -193,10 +197,10 @@ void Player::InputShift() {
 
 void Player::MovementAnimation() {
 	SetScaleForPlayer();
-	if (b.isJumping) {return;}
+	if (b.isJumping || b.isAttacking) {return;}
 		aT.animationTime += this->deltaTime;
 		if (aT.animationTime >= aT.animationRate) {
-			aT.animationTime -= aT.animationRate;
+			aT.animationTime = 0;
 			auto& counter = (b.isMovingLeft ? c.counterLeft : c.counterRight);
 			auto& size = (b.isMovingLeft || b.isMovingRight || b.isGravityAffecting) && !b.isDodgeBoost ? aSP.run : aSP.idle;
 			auto& animationSize = (b.isMovingLeft || b.isMovingRight || b.isGravityAffecting) && !b.isDodgeBoost ? aS.animationSize : aS.idleSize;
@@ -216,7 +220,7 @@ void Player::SetScaleForPlayer() {
 
 void Player::ShiftAnimation(){
 	if (b.isDodgeBoost) {
-		gameObject.utility.UpdateAnimation(sprite, playerAnimation, c.counterSlide, aSP.slide, aS.jumpAndSlide);
+		gameObject.utility.UpdateAnimation(this->sprite, this->playerAnimation, c.counterSlide, aSP.slide, aS.jumpAndSlide);
 	}
 }
 
@@ -226,13 +230,27 @@ void Player::ShiftAnimation(){
 
 
 void Player::JumpAnimation() {
-	if (b.isJumping) {
+	if (b.isJumping && !b.isAttacking) {
 		aT.jumpAnimationTime += this->deltaTime;
 		if (aT.jumpAnimationTime >= aT.animationRate) {
 			aT.jumpAnimationTime -= aT.animationRate;
-			gameObject.utility.UpdateAnimation(sprite, playerAnimation,(b.isJumpBoost ? c.counterJumpFirst : c.counterJumpSecond),
+			gameObject.utility.UpdateAnimation(this->sprite, this->playerAnimation,(b.isJumpBoost ? c.counterJumpFirst : c.counterJumpSecond),
 				(b.isJumpBoost ? aSP.jumpFirsthalf : aSP.jumpSecondhalf), aS.jumpAndSlide);
 		}
+	}
+}
+
+void Player::AttackAnimation(){
+	if (b.isAttacking) {
+		aT.attackAnimationTime += this->deltaTime;
+		std::cout << aT.attackAnimationTime << std::endl;
+		if (gT.attackReseter == 6) { b.isAttacking = false; gT.attackReseter = 0; }
+		if (aT.attackAnimationRate < aT.attackAnimationTime) {
+			gT.attackReseter++;
+			aT.attackAnimationTime = 0;
+			gameObject.utility.UpdateAnimation(this->sprite, this->playerAnimation, c.counterAttack1, aSP.attack1 , aS.animationSize);
+		}
+
 	}
 }
 
@@ -249,23 +267,26 @@ void Player::ProjectileLoad(){
 	gT.fireTime += this->deltaTime;
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && gT.fireRate <= gT.fireTime) {
 		b.isFiring = true;
+		b.isAttacking = true; 
+		c.counterAttack1 = 0; 
+		c.counterAttack1 = 0;
 		gT.fireTime = 0; 
-		sf::Vector2f shootingPosition;
 		this->playerToMouseDistance = this->window->mapPixelToCoords(sf::Mouse::getPosition(*this->window)).x - this->sprite.getPosition().x;
 		if (b.isMovingLeft && this->playerToMouseDistance < 0) {
-        shootingPosition.x = this->playerCollisionBox.getPosition().x - this->playerCollisionBox.getGlobalBounds().width / 2 - GMnumber::one;
+        this->shootingPosition.x = this->playerCollisionBox.getPosition().x - this->playerCollisionBox.getGlobalBounds().width / 2 - GMnumber::one;
 		}
 		else if (b.isMovingRight && this->playerToMouseDistance > 0) {
-			shootingPosition.x = this->playerCollisionBox.getPosition().x + this->playerCollisionBox.getGlobalBounds().width / 2 + GMnumber::one;
+			this->shootingPosition.x = this->playerCollisionBox.getPosition().x + this->playerCollisionBox.getGlobalBounds().width / 2 + GMnumber::one;
 		}
 		else if (!b.isMovingLeft && !b.isMovingRight){
-			shootingPosition.x = this->playerCollisionBox.getPosition().x +
+			this->shootingPosition.x = this->playerCollisionBox.getPosition().x +
 				(playerToMouseDistance >= 0 ? (this->playerCollisionBox.getGlobalBounds().width /2 + GMnumber::one) :
 					-(this->playerCollisionBox.getGlobalBounds().width / 2 + GMnumber::one));
 		}
 		else { return; }
-		shootingPosition.y = this->playerCollisionBox.getPosition().y - this->playerCollisionBox.getGlobalBounds().height/7;
-		projectile.push_back(std::make_unique<AuraSlice>(this->playerId, shootingPosition, this->maxShootingDistance));
+		this->shootingPosition.y = this->playerCollisionBox.getPosition().y - this->playerCollisionBox.getGlobalBounds().height/7;
+		projectile.push_back(std::make_unique<AuraSlice>(this->playerId, this->shootingPosition, this->maxShootingDistance));
+		this->shootingPosition.x = 0; this->shootingPosition.y = 0;
 	}
 }
 
@@ -286,6 +307,7 @@ void Player::ProjectileDraw() {
 void Player::ProjectileDestroy(int& i) {
 	if (projectile[i]->IsOutOfReach() || projectile[i]->IsCollidedWithPath()) {
 		this->projectile.erase(projectile.begin() + i);
+		//b.isAttacking = false;
 	}
 }
 

@@ -27,7 +27,7 @@ private:
 	unsigned int counter;
 	float angle;
 public:
-	AuraSlice(const unsigned int entityId, const sf::Vector2f startingPosition, const unsigned int maxDistanceTravel);
+	AuraSlice(const unsigned int& entityId, const sf::Vector2f& startingPosition, const unsigned int& maxDistanceTravel);
 	inline bool& IsOutOfReach() { return isDestroyedWhenOutOfReach; }
 	inline bool& IsCollidedWithPath() { return isDestroyedWhenHitWithPath; }
 

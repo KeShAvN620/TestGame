@@ -22,6 +22,7 @@ private:
 	std::vector<std::shared_ptr<BackGround>> level1;
 	sf::Vector2f playerPosition;
 	sf::Vector2f pathPosition;
+public:
 	PathData pathdatas;
 
 
@@ -33,7 +34,6 @@ public:
 	void Update();
 	void Draw(std::shared_ptr<sf::RenderWindow>& window);
 private:
-	void VectorsOverWrite();
 	inline float GetProperScaleX(const float xPosition);
 	inline float GetProperScaleY(const float yPosition);
 };
